@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizWebAssembly</title>
+    <base href="/" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="QuizWebAssembly.styles.css" rel="stylesheet" />
+    <!-- Font Awesome (اختیاری برای آیکن‌ها) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar در موبایل
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebarBtn = document.getElementById('toggleSidebar');
+
+        const openSidebar = () => {
+            sidebar.classList.add('show');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        const closeSidebar = () => {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        toggleSidebarBtn?.addEventListener('click', openSidebar);
+        overlay?.addEventListener('click', closeSidebar);
+
+        // بستن خودکار سایدبار هنگام کلیک روی لینک‌های داخلی در موبایل
+        sidebar.addEventListener('click', (e) => {
+            const link = e.target.closest('a.sidebar-link');
+            if (link && window.innerWidth <= 992) {
+                // اگر لینک collapse است، نگذاریم فوراً بسته شود
+                if (!link.hasAttribute('data-bs-toggle')) {
+                    closeSidebar();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

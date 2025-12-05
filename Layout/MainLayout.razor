@@ -1,0 +1,228 @@
+﻿@inherits LayoutComponentBase
+
+<div class="wrapper">
+
+    <!-- سایدبار -->
+    <aside class="app-sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>پنل مدیریت</span>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="sidebar-section-title">ناوبری</div>
+
+            <!-- آیتم ساده -->
+            <div class="sidebar-item">
+                <NavLink href="/Dashboard" Match="NavLinkMatch.All" class="sidebar-link">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>داشبورد</span>
+                </NavLink>
+            </div>
+
+            <!-- سطح اول با collapse -->
+            <div class="sidebar-item">
+                <a class="sidebar-link" data-bs-toggle="collapse" href="#menuUsers" role="button" aria-expanded="false" aria-controls="menuUsers">
+                    <i class="fa-solid fa-users"></i>
+                    <span>کاربران</span>
+                    <i class="fa-solid fa-angle-down ms-auto"></i>
+                </a>
+                <div class="collapse" id="menuUsers">
+
+                    <div class="sidebar-item">
+                        <NavLink href="/Admin/Users" Match="NavLinkMatch.All" class="sidebar-item">
+                            <span class="sidebar-link">لیست کاربران</span>
+                        </NavLink>
+                    </div>
+                    @*                     <div class="sidebar-item">
+                        <a href="#" class="sidebar-link">ایجاد کاربر</a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a class="sidebar-link" data-bs-toggle="collapse" href="#menuRoles" role="button" aria-expanded="false" aria-controls="menuRoles">
+                            نقش‌ها
+                            <i class="fa-solid fa-angle-down ms-auto"></i>
+                        </a>
+                        <div class="collapse" id="menuRoles">
+                            <div class="sidebar-item">
+                                <a href="#" class="sidebar-link">لیست نقش‌ها</a>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="#" class="sidebar-link">افزودن نقش</a>
+                            </div>
+
+                            <!-- سطح سوم -->
+                            <div class="sidebar-item">
+                                <a class="sidebar-link" data-bs-toggle="collapse" href="#menuPermissions" role="button" aria-expanded="false" aria-controls="menuPermissions">
+                                    دسترسی‌ها
+                                    <i class="fa-solid fa-angle-down ms-auto"></i>
+                                </a>
+                                <div class="collapse" id="menuPermissions">
+                                    <div class="sidebar-item">
+                                        <a href="#" class="sidebar-link">لیست دسترسی‌ها</a>
+                                    </div>
+                                    <div class="sidebar-item">
+                                        <a href="#" class="sidebar-link">تنظیم دسترسی</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- پایان سطح سوم -->
+
+                        </div>
+                    </div> *@
+
+                </div>
+            </div>
+
+            <!-- بخش‌ها -->
+            @*             <div class="sidebar-item">
+                <a class="sidebar-link" data-bs-toggle="collapse" href="#menuContent" role="button" aria-expanded="false" aria-controls="menuContent">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>محتوا</span>
+                    <i class="fa-solid fa-angle-down ms-auto"></i>
+                </a>
+                <div class="collapse" id="menuContent">
+                    <div class="sidebar-item"><a href="#" class="sidebar-link">مقالات</a></div>
+                    <div class="sidebar-item"><a href="#" class="sidebar-link">دسته‌بندی‌ها</a></div>
+                    <div class="sidebar-item"><a href="#" class="sidebar-link">برچسب‌ها</a></div>
+                </div>
+            </div>
+
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>تنظیمات</span>
+                </a>
+            </div> *@
+        </div>
+    </aside>
+
+    <!-- هدر -->
+    <header class="app-header">
+        <nav class="navbar navbar-expand-lg px-3">
+            <button class="btn btn-outline-secondary d-lg-none me-2" id="toggleSidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <a class="navbar-brand fw-bold" href="#">مدیریت</a>
+
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <form class="d-none d-md-flex">
+                    <input class="form-control" type="search" placeholder="جستجو..." aria-label="Search">
+                </form>
+                <button class="btn btn-light"><i class="fa-regular fa-bell"></i></button>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fa-regular fa-user"></i> پروفایل
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">تنظیمات حساب</a></li>
+                        <li><a class="dropdown-item" href="#">خروج</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- محتوا -->
+    <main class="app-content">
+        <div class="content-header d-flex align-items-center justify-content-between">
+            <div>
+                <h5 class="mb-1">داشبورد</h5>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">خانه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">داشبورد</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> اقدام جدید</button>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted">کاربران فعال</div>
+                                <div class="fs-4 fw-bold">1,248</div>
+                            </div>
+                            <i class="fa-solid fa-user-check fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted">سفارشات امروز</div>
+                                <div class="fs-4 fw-bold">82</div>
+                            </div>
+                            <i class="fa-solid fa-cart-shopping fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted">درآمد</div>
+                                <div class="fs-4 fw-bold">€ 12.4K</div>
+                            </div>
+                            <i class="fa-solid fa-sack-dollar fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted">پیغام‌ها</div>
+                                <div class="fs-4 fw-bold">19</div>
+                            </div>
+                            <i class="fa-regular fa-envelope fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محتوای نمونه -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>گزارش هفتگی</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary">امروز</button>
+                            <button class="btn btn-sm btn-outline-secondary">این هفته</button>
+                            <button class="btn btn-sm btn-outline-secondary">این ماه</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @Body
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="app-footer">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-between py-2 px-3">
+                <span class="text-muted">© 2025 پنل مدیریت</span>
+                <span class="text-muted">نسخه 1.0.0</span>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Overlay برای موبایل -->
+<div class="overlay" id="overlay"></div>
