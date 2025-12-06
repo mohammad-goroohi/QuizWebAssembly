@@ -30,6 +30,7 @@ namespace QuizWebAssembly.Services
         }
         public async Task CreateUserAsync(User user)
         {
+            user.Id = new Random().Next();
             _users.Add(user.Id, user);
             await Task.CompletedTask;
         }
