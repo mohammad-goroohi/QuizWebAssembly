@@ -34,5 +34,10 @@ namespace QuizWebAssembly.Services
             _users.Add(user.Id, user);
             await Task.CompletedTask;
         }
+        public async Task DeleteUserAsync(int UserId)
+        {
+            _users.Remove(UserId);
+            await Task.CompletedTask;
+        }
     }
 }

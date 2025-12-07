@@ -17,7 +17,7 @@
 <div class="col-12">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span>گزارش هفتگی</span>
+            <span>لیست کاربران</span>
             <div class="btn-group">
                 <button @onclick="OpenCreateUserModal" class="btn btn-primary"><i class="fa-solid fa-plus"></i> کاربر جدید</button>
             </div>
@@ -49,7 +49,7 @@
                                             <button @onclick="()=>OpenEditUserModalAsync(User.Id)" class="btn btn-sm btn-primary me-1">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-danger">
+                                            <button @onclick="()=>OpenConfirmDeleteUserModal(User.Id)" class="btn btn-sm btn-danger">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </span>
@@ -64,7 +64,7 @@
                                     هیچ داده‌ای موجود نیست
                                 </td>
                             </tr>
-                        }                
+                        }
                     </tbody>
                 </table>
             </div>
@@ -140,11 +140,33 @@
         </div>
     </div>
 }
+@if (SelectedUserIdForDelete != 0)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
+                <div class="modal-header">
+                    <h5 class="modal-title">تایید عملیات حذف</h5>
+                </div>
+
+                <div class="modal-body">
+                    <p>ایا از حذف این کاربر اطمینان دارید.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseDeleteUserModal">لغو</button>
+                    <button class="btn btn-danger" @onclick="ConfirmDeleteUserModal">تأیید</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     private List<UserViewModel> UserList { get; set; }
-
+    private int SelectedUserIdForDelete;
     public UserViewModel? SelectedUserForEdit { get; set; }
     private bool IsOpenCreateUserModal;
     public User CreateUser { get; set; } = new User();
@@ -178,6 +200,20 @@
     public void CloseEditUserModal()
     {
         SelectedUserForEdit = null;
+    }
+    public async Task ConfirmDeleteUserModal()
+    {
+        await UsersService.DeleteUserAsync(SelectedUserIdForDelete);
+        await LoadGridData();
+        CloseDeleteUserModal();
+    }
+    public void CloseDeleteUserModal()
+    {
+        SelectedUserIdForDelete = 0;
+    }
+    public void OpenConfirmDeleteUserModal(int UserId)
+    {
+        SelectedUserIdForDelete = UserId;
     }
 }
 
