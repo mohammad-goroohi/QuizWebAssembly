@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-
+@inject EditorModalService EditorModalService
 <div class="wrapper">
 
     <!-- سایدبار -->
@@ -138,7 +138,7 @@
         </div>
 
         <div class="row g-3">
-@*             <div class="col-12 col-md-6 col-xl-3">
+            @*             <div class="col-12 col-md-6 col-xl-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
@@ -203,5 +203,17 @@
         </div>
     </footer>
 </div>
-
+<ModelEditorModal ModalConfig="_modalConfig" />
 <div class="overlay" id="overlay"></div>
+
+@code{
+    private ModelEditor _modalConfig;
+    protected override void OnInitialized()
+    {
+        EditorModalService.OpenModal = OpenEditorModal;
+    }
+    public void OpenEditorModal(ModelEditor ModalConfig)
+    {
+        _modalConfig = ModalConfig;
+    }
+}

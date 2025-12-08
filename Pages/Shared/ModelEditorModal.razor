@@ -1,0 +1,27 @@
+﻿@if (ModalConfig.IsShow)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">@ModalConfig.Title</h5>
+                </div>
+
+                <div class="modal-body">
+                    @foreach (var Field in ModalConfig.Fields)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">@Field.DisplayName</label>
+                            <input class="form-control" @bind="Field.Value" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    public ModelEditor ModalConfig { get; set; } = new ModelEditor();
+}
