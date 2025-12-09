@@ -203,17 +203,26 @@
         </div>
     </footer>
 </div>
-<ModelEditorModal ModalConfig="_modalConfig" />
+<ModelEditorModal IsShow=IsShowEditorModal />
 <div class="overlay" id="overlay"></div>
 
-@code{
-    private ModelEditor _modalConfig;
+@code {
+    public bool IsShowEditorModal { get; set; } = false;
     protected override void OnInitialized()
     {
         EditorModalService.OpenModal = OpenEditorModal;
+        EditorModalService.CloseModal = CloseEditorModal;
     }
-    public void OpenEditorModal(ModelEditor ModalConfig)
+    public void OpenEditorModal(List<PropertyDescriptor> Fields)
     {
-        _modalConfig = ModalConfig;
+        EditorModalService.Fields = Fields;
+        IsShowEditorModal = true;
+        StateHasChanged();
+    }
+    public void CloseEditorModal()
+    {
+        EditorModalService.Fields = new List<PropertyDescriptor>();
+        IsShowEditorModal = false;
+        StateHasChanged();
     }
 }

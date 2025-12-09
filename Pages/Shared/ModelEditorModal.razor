@@ -1,15 +1,17 @@
-﻿@if (ModalConfig.IsShow)
+﻿@inject EditorModalService EditorModalService
+
+@if (IsShow)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">@ModalConfig.Title</h5>
+                    <h5 class="modal-title">@EditorModalService.Title</h5>
                 </div>
 
                 <div class="modal-body">
-                    @foreach (var Field in ModalConfig.Fields)
+                    @foreach (var Field in EditorModalService.Fields)
                     {
                         <div class="mb-3">
                             <label class="form-label">@Field.DisplayName</label>
@@ -17,11 +19,22 @@
                         </div>
                     }
                 </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="EditorModalService.CloseModal">بستن</button>
+                    <button class="btn btn-primary" @onclick="OnConfirmClick">ثبت</button>
+                </div>
             </div>
         </div>
     </div>
 }
 
 @code {
-    public ModelEditor ModalConfig { get; set; } = new ModelEditor();
+    [Parameter]
+    public bool IsShow { get; set; }
+
+    private void OnConfirmClick()
+    {
+        EditorModalService!.CloseModal();
+        EditorModalService!.OnConfirmClick();
+    }
 }
