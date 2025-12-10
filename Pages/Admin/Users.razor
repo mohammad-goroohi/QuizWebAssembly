@@ -6,12 +6,12 @@
 <style>
     /* دکمه‌های عملیات در حالت عادی مخفی باشند */
     .action-icons {
-    display: none;
-    white-space: nowrap;
+        display: none;
+        white-space: nowrap;
     }
     /* وقتی موس روی ردیف رفت، نمایش داده شوند */
     tr:hover .action-icons {
-    display: inline-block;
+        display: inline-block;
     }
 </style>
 <div class="col-12">
@@ -180,19 +180,25 @@
     }
     public async Task OpenEditUserModalAsync(int Id)
     {
-        EditorModalService.OnConfirmClick = () =>
-        {
-
-        };
-        EditorModalService.OpenModal(new List<PropertyDescriptor>
+        var UserModalFields = new List<PropertyDescriptor>
                         {
-                            new PropertyDescriptor
-                            {
-                                DisplayName="نام کاربری",
-                                Name="UserId",
-                                Value = string.Empty
-                            }
-                        });
+            new PropertyDescriptor
+                {
+                    DisplayName = "نام",
+                    Name = "FirstName",
+                    Value = string.Empty
+                },            new PropertyDescriptor
+                {
+                    DisplayName = "نام خوانوادگی",
+                    Name = "LastName",
+                    Value = string.Empty
+                },
+                    };
+        EditorModalService.OnConfirmClick = () =>
+    {
+
+    };
+        EditorModalService.OpenModal(UserModalFields);
         await Task.FromResult(0);
         //SelectedUserForEdit = await UsersService.GetUserByIdAsync(Id);
     }
