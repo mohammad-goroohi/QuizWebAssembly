@@ -7,9 +7,5 @@
         public ModelEditorValueType ValuType { get; set; }
         public string Value { get; set; }
     }
-    public enum ModelEditorValueType
-    {
-        Text,
-        Number
-    }
+
 }

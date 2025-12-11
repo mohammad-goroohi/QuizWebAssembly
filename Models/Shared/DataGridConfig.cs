@@ -14,11 +14,30 @@
 
         public string Scope { get; set; } = "col";
         public string Style { get; set; } = string.Empty;
+        public string Class { get; set; } = string.Empty;
+    }
+    public class NewItemField
+    {
+        public string Title { get; set; } = string.Empty;
+        public string PropertyName { get; set; } = string.Empty;
+
+        public string Scope { get; set; } = "col";
+        public string Style { get; set; } = string.Empty;
+        public string Class { get; set; } = string.Empty;
+
+        public ModelEditorValueType ValuType { get; set; }
+        public string Value { get; set; }
+    }
+    public enum ModelEditorValueType
+    {
+        Text,
+        Number
     }
     public class NewRowButtonDataGridConfig
     {
         public string ButtonTitle { get; set; }
         public bool IsShow { get; set; }
-        public Action OnClick { get; set; }
+        public Func<Dictionary<string,string>,bool> OnSubmitCreateItem { get; set; }
+        public List<NewItemField> Fields { get; set; }
     }
 }

@@ -1,0 +1,48 @@
+﻿@page "/Admin/Roles"
+@layout MainLayout
+
+
+<DataGrid Config="RoleDataGridConfig" />
+
+@code {
+    public DataGridConfig RoleDataGridConfig { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        RoleDataGridConfig = new DataGridConfig();
+        RoleDataGridConfig.Title = "لیست نقش ها";
+        RoleDataGridConfig.Columns = new List<DataGridColumn>
+        {
+            new DataGridColumn
+            {
+                PropertyName = "Title",
+                Title = "عنوان"
+            },
+        };
+        RoleDataGridConfig.LoadDataAsync = () =>
+        {
+            return Task.FromResult(new List<dynamic>
+                {
+               new {Title = "نقش 1"  },
+               new {Title = "نقش 2"  },
+                });
+        };
+        RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
+            {
+                ButtonTitle = "نقش جدید",
+                IsShow = true,
+Fields = new List<NewItemField>
+{
+  new NewItemField
+  {
+PropertyName = "RoleName",
+      Title = "عنوان"
+  }              
+},
+                OnSubmitCreateItem = (form) =>
+                {
+                    return true;
+                }
+            };
+
+    }
+}

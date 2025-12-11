@@ -16,7 +16,7 @@
             @if (Config.NewRowButtonDataGridConfig.IsShow)
             {
                 <div class="btn-group">
-                    <button @onclick="Config.NewRowButtonDataGridConfig.OnClick" class="btn btn-primary"><i class="fa-solid fa-plus"></i> @Config.NewRowButtonDataGridConfig.ButtonTitle</button>
+                    <button @onclick="OpenInputMadal" class="btn btn-primary"><i class="fa-solid fa-plus"></i> @Config.NewRowButtonDataGridConfig.ButtonTitle</button>
                 </div>
             }
         </div>
@@ -27,7 +27,7 @@
                         <tr>
                             @foreach (var Column in Config.Columns)
                             {
-                                <th scope="@Column.Scope" style="@Column.Style">@Column.Title</th>
+                                <th scope="@Column.Scope" class="@Column.Class" style="@Column.Style">@Column.Title</th>
                             }
                         </tr>
                     </thead>
@@ -41,7 +41,7 @@
                                     {
                                         <td>@item[Column.PropertyName]</td>
                                     }
-@*                                     <td>
+                                    @*                                     <td>
                                         <span class="action-icons ms-2">
                                             <button @onclick="()=>OpenEditUserModalAsync(User.Id)" class="btn btn-sm btn-primary me-1">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -68,13 +68,39 @@
         </div>
     </div>
 </div>
+@if (IsShowInputMadal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
+                <div class="modal-header">
+                    <h5 class="modal-title">@Config.NewRowButtonDataGridConfig.ButtonTitle</h5>
+                </div>
+
+                <div class="modal-body">
+                    @foreach (var Field in Config.NewRowButtonDataGridConfig.Fields)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">@Field.Title</label>
+                            <input class="form-control" @bind="Field.Value" />
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseInputMadal">بستن</button>
+                    <button class="btn btn-primary" @onclick="OnSubmitCreateItem">ثبت</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
     public DataGridConfig Config { get; set; } = new DataGridConfig();
     private List<Dictionary<string, string>> Data { get; set; } = new List<Dictionary<string, string>>();
-
+    private bool IsShowInputMadal { get; set; }
     protected override async Task OnInitializedAsync()
     {
         var list = await Config.LoadDataAsync();
@@ -86,7 +112,23 @@
             Data.Add(dict);
         }
     }
-
+    public void OnSubmitCreateItem()
+    {
+        var form = Config.NewRowButtonDataGridConfig.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
+        var CloseModal = Config.NewRowButtonDataGridConfig.OnSubmitCreateItem(form);
+        if (CloseModal)
+        {
+            CloseInputMadal();
+        }
+    }
+    public void OpenInputMadal()
+    {
+        IsShowInputMadal = true;
+    }
+    public void CloseInputMadal()
+    {
+        IsShowInputMadal = false;
+    }
 
 
 
@@ -97,63 +139,63 @@
     protected async Task LoadGridData()
     {
         UserList = await UsersService.GetUsersAsync();
-    }
+        }
     public async Task OpenEditUserModalAsync(int Id)
     {
         var UserModalFields = new List<PropertyDescriptor>
-                        {
-            new PropertyDescriptor
-                {
-                    DisplayName = "نام",
-                    Name = "FirstName",
-                    Value = string.Empty
-                },            new PropertyDescriptor
-                {
-                    DisplayName = "نام خوانوادگی",
-                    Name = "LastName",
-                    Value = string.Empty
-                },
-                    };
+                            {
+                new PropertyDescriptor
+                    {
+                        DisplayName = "نام",
+                        Name = "FirstName",
+                        Value = string.Empty
+                    },            new PropertyDescriptor
+                    {
+                        DisplayName = "نام خوانوادگی",
+                        Name = "LastName",
+                        Value = string.Empty
+                    },
+                        };
         EditorModalService.OnConfirmClick = () =>
-    {
+        {
 
-    };
+            };
         EditorModalService.OpenModal(UserModalFields);
         await Task.FromResult(0);
         //SelectedUserForEdit = await UsersService.GetUserByIdAsync(Id);
-    }
+        }
     public void OpenCreateUserModal()
     {
         IsOpenCreateUserModal = true;
-    }
+        }
     public async Task CreateUserAsync()
     {
         await UsersService.CreateUserAsync(CreateUser);
         await LoadGridData();
         CloseCreateUserModal();
         CreateUser = new User();
-    }
+        }
     public void CloseCreateUserModal()
     {
         IsOpenCreateUserModal = false;
-    }
+        }
     public void CloseEditUserModal()
     {
         SelectedUserForEdit = null;
-    }
+        }
     public async Task ConfirmDeleteUserModal()
     {
         await UsersService.DeleteUserAsync(SelectedUserIdForDelete);
         await LoadGridData();
         CloseDeleteUserModal();
-    }
+        }
     public void CloseDeleteUserModal()
     {
         SelectedUserIdForDelete = 0;
-    }
+        }
     public void OpenConfirmDeleteUserModal(int UserId)
     {
         SelectedUserIdForDelete = UserId;
-    }*/
+        }*/
 }
 
