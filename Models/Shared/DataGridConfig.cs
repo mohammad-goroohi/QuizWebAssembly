@@ -28,10 +28,15 @@
         public ModelEditorValueType ValuType { get; set; }
         public string Value { get; set; }
     }
+    public class SelectiveItemField : NewItemField
+    {
+        public List<SelectItem> Items { get; set; }
+    }
     public enum ModelEditorValueType
     {
         Text,
-        Number
+        Number,
+        Selective
     }
     public class NewRowButtonDataGridConfig
     {
@@ -39,5 +44,10 @@
         public bool IsShow { get; set; }
         public Func<Dictionary<string,string>,bool> OnSubmitCreateItem { get; set; }
         public List<NewItemField> Fields { get; set; }
+    }
+    public class SelectItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
     }
 }

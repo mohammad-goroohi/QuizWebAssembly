@@ -1,0 +1,94 @@
+﻿<div class="position-relative" @onclick:stopPropagation="true">
+
+    <!-- Input-like box -->
+    <div class="form-control d-flex flex-wrap align-items-center"
+         style="cursor: pointer;"
+         @onclick="ToggleDropdown">
+
+        @if (SelectedItems.Any())
+        {
+            @foreach (var item in SelectedItems)
+            {
+                <span class="badge bg-primary me-1 mb-1">
+                    @item.Title
+                    <button type="button"
+                            class="btn btn-sm btn-close btn-close-white ms-1"
+                            style="font-size: 0.6rem;"
+                            @onclick="(e => RemoveItem(item))">
+                    </button>
+                </span>
+            }
+        }
+        else
+        {
+            <span class="text-muted">انتخاب کنید...</span>
+        }
+    </div>
+
+    <!-- Dropdown list -->
+    @if (IsOpen)
+    {
+        <div class="border rounded mt-1 bg-white position-absolute w-100 shadow-sm" style="z-index: 1050; max-height: 250px; overflow-y: auto;">
+            @foreach (var item in Items)
+            {
+                var isSelected = SelectedItems.Any(s => s.Id == item.Id);
+
+                <div class="d-flex align-items-center px-2 py-1"
+                     style="cursor: pointer; background-color:@(isSelected ? "#e7f1ff" : "transparent")"
+                     @onclick="(e => ToggleItem(item))">
+
+                    <input type="checkbox" class="form-check-input me-2" checked="@isSelected" />
+                    <span>@item.Title</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter] public List<SelectItem> Items { get; set; } = new();
+
+    [Parameter] public List<int> Value { get; set; } = new();
+
+    [Parameter] public EventCallback<List<int>> ValueChanged { get; set; }
+
+    protected bool IsOpen { get; set; } = false;
+
+    protected List<SelectItem> SelectedItems { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        // Sync SelectedItems با Value
+        SelectedItems = Items
+            .Where(i => Value.Contains(i.Id))
+            .ToList();
+    }
+
+    protected void ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+    }
+
+    protected async Task ToggleItem(SelectItem item)
+    {
+        if (SelectedItems.Any(s => s.Id == item.Id))
+        {
+            SelectedItems.RemoveAll(s => s.Id == item.Id);
+        }
+        else
+        {
+            SelectedItems.Add(item);
+        }
+
+        Value = SelectedItems.Select(s => s.Id).ToList();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    protected async Task RemoveItem(SelectItem item)
+    {
+        SelectedItems.RemoveAll(s => s.Id == item.Id);
+        Value = SelectedItems.Select(s => s.Id).ToList();
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

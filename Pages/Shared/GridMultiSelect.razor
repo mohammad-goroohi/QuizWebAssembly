@@ -1,0 +1,127 @@
+﻿<div class="position-relative" @onclick:stopPropagation="true">
+
+    <!-- Input box -->
+    <div class="form-control d-flex flex-wrap align-items-center"
+         style="cursor: pointer;"
+         @onclick="ToggleDropdown">
+
+        @if (SelectedItems.Any())
+        {
+            @foreach (var item in SelectedItems)
+            {
+                <span class="badge bg-primary me-1 mb-1">
+                    @item.Title
+                    <button type="button"
+                            class="btn btn-sm btn-close btn-close-white ms-1"
+                            style="font-size: 0.6rem;"
+                            @onclick="(e => RemoveItem(item))">
+                    </button>
+                </span>
+            }
+        }
+        else
+        {
+            <span class="text-muted">انتخاب کنید...</span>
+        }
+    </div>
+
+    <!-- Dropdown Grid -->
+    @if (IsOpen)
+    {
+        <div class="border rounded bg-white position-absolute w-100 mt-1 shadow-sm"
+             style="z-index: 1050; max-height: 300px; overflow-y: auto;">
+
+            <!-- Search Row -->
+            <div class="p-2 border-bottom bg-light">
+                <div class="row g-2">
+                    <div class="col-4">
+                        <input class="form-control" placeholder="جستجو Id"
+                               @bind="SearchId" @bind:event="oninput" />
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" placeholder="جستجو عنوان"
+                               @bind="SearchTitle" @bind:event="oninput" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Header -->
+            <div class="row fw-bold border-bottom py-2 px-2">
+                <div class="col-1">✔</div>
+                <div class="col-3">Id</div>
+                <div class="col-8">عنوان</div>
+            </div>
+
+            <!-- Grid Items -->
+            @foreach (var item in FilteredItems)
+            {
+                var isSelected = SelectedItems.Any(s => s.Id == item.Id);
+
+                <div class="row px-2 py-1 align-items-center"
+                     style="cursor: pointer; background:@(isSelected ? "#e7f1ff" : "transparent")"
+                     @onclick="() => ToggleItem(item)">
+
+                    <div class="col-1">
+                        <input type="checkbox" checked="@isSelected" />
+                    </div>
+
+                    <div class="col-3">@item.Id</div>
+                    <div class="col-8">@item.Title</div>
+                </div>
+            }
+
+            @if (!FilteredItems.Any())
+            {
+                <div class="text-center text-muted py-3">
+                    موردی یافت نشد
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<SelectItem> Items { get; set; } = new();
+    [Parameter] public List<int> Value { get; set; } = new();
+    [Parameter] public EventCallback<List<int>> ValueChanged { get; set; }
+
+    protected bool IsOpen { get; set; }
+    protected string SearchId { get; set; } = "";
+    protected string SearchTitle { get; set; } = "";
+
+    protected List<SelectItem> SelectedItems { get; set; } = new();
+
+    protected IEnumerable<SelectItem> FilteredItems =>
+        Items.Where(i =>
+            (string.IsNullOrWhiteSpace(SearchId) || i.Id.ToString().Contains(SearchId)) &&
+            (string.IsNullOrWhiteSpace(SearchTitle) || i.Title.Contains(SearchTitle, StringComparison.OrdinalIgnoreCase))
+        );
+
+    protected override void OnParametersSet()
+    {
+        SelectedItems = Items.Where(i => Value.Contains(i.Id)).ToList();
+    }
+
+    protected void ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+    }
+
+    protected async Task ToggleItem(SelectItem item)
+    {
+        if (SelectedItems.Any(s => s.Id == item.Id))
+            SelectedItems.RemoveAll(s => s.Id == item.Id);
+        else
+            SelectedItems.Add(item);
+
+        Value = SelectedItems.Select(s => s.Id).ToList();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    protected async Task RemoveItem(SelectItem item)
+    {
+        SelectedItems.RemoveAll(s => s.Id == item.Id);
+        Value = SelectedItems.Select(s => s.Id).ToList();
+        await ValueChanged.InvokeAsync(Value);
+    }
+}
