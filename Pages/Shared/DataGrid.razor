@@ -29,6 +29,10 @@
                             {
                                 <th scope="@Column.Scope" class="@Column.Class" style="@Column.Style">@Column.Title</th>
                             }
+                            @foreach (var GroupAction in Config.GroupActions)
+                            {
+                                <th style="width:@GroupAction.Width"></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -41,16 +45,29 @@
                                     {
                                         <td>@item[Column.PropertyName]</td>
                                     }
-                                    @*                                     <td>
+                                    @*                                     @foreach (var GroupAction in Config.GroupActions)
+                                    {
+                                        <td>
+                                            <span class="action-icons ms-2">
+                                                @foreach (var Action in GroupAction.Actions)
+                                                {
+                                                    <button @onclick="()=>Action.OnClick(item)" class="btn btn-sm @Action.ButtonClass me-1">
+                                                        <i class="fa-solid @Action.IconClass"></i>
+                                                    </button>
+                                                }
+                                            </span>
+                                        </td>
+                                    } *@
+                                    <td>
                                         <span class="action-icons ms-2">
-                                            <button @onclick="()=>OpenEditUserModalAsync(User.Id)" class="btn btn-sm btn-primary me-1">
+                                            <button @onclick="()=>OpenEditUserModalAsync(item)" class="btn btn-sm btn-primary me-1">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
-                                            <button @onclick="()=>OpenConfirmDeleteUserModal(User.Id)" class="btn btn-sm btn-danger">
+                                            @*                                             <button @onclick="()=>OpenConfirmDeleteUserModal(User.Id)" class="btn btn-sm btn-danger">
                                                 <i class="fa-solid fa-trash"></i>
-                                            </button>
+                                            </button> *@
                                         </span>
-                                    </td> *@
+                                    </td>
                                 </tr>
                             }
                         }
@@ -70,21 +87,40 @@
 </div>
 @if (IsShowInputMadal)
 {
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal modal-lg fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">@Config.NewRowButtonDataGridConfig.ButtonTitle</h5>
+                    <h5 class="modal-title">@InputModal.Title</h5>
                 </div>
 
                 <div class="modal-body">
-                    @foreach (var Field in Config.NewRowButtonDataGridConfig.Fields)
+                    @foreach (var Field in InputModal.Fields)
                     {
-                        <div class="mb-3">
-                            <label class="form-label">@Field.Title</label>
-                            <input class="form-control" @bind="Field.Value" />
-                        </div>
+                        @switch (Field.ValuType)
+                        {
+                            case ModelEditorValueType.Text:
+                                {
+                                    <div class="mb-3">
+                                        <label class="form-label">@Field.Title</label>
+                                        <input class="form-control" @bind="Field.Value" />
+                                    </div>
+                                    break;
+                                }
+                            case ModelEditorValueType.Number:
+                                {
+
+                                    break;
+                                }
+                            case ModelEditorValueType.Selective:
+                                {
+                                    @* <SearchableSelect Items="((SelectiveItemField)Field).Items" /> *@
+                                    @* <MultiSelect Items="((SelectiveItemField)Field).Items" /> *@
+                                    <GridMultiSelect Items="((SelectiveItemField)Field).Items" />
+                                    break;
+                                }
+                        }
                     }
                 </div>
                 <div class="modal-footer">
@@ -100,6 +136,7 @@
     [Parameter]
     public DataGridConfig Config { get; set; } = new DataGridConfig();
     private List<Dictionary<string, string>> Data { get; set; } = new List<Dictionary<string, string>>();
+    public InputModal InputModal { get; set; } = new InputModal();
     private bool IsShowInputMadal { get; set; }
     protected override async Task OnInitializedAsync()
     {
@@ -123,13 +160,18 @@
     }
     public void OpenInputMadal()
     {
+        InputModal = Config.NewRowButtonDataGridConfig;
         IsShowInputMadal = true;
     }
     public void CloseInputMadal()
     {
         IsShowInputMadal = false;
     }
-
+    public void OpenEditUserModalAsync(Dictionary<string,string> row)
+    {
+        InputModal = Config.EditButtonDataGridConfig.OnOpenModal(row);
+        IsShowInputMadal = true;
+    }
 
 
     /*private int SelectedUserIdForDelete;
@@ -143,19 +185,19 @@
     public async Task OpenEditUserModalAsync(int Id)
     {
         var UserModalFields = new List<PropertyDescriptor>
-                            {
-                new PropertyDescriptor
-                    {
-                        DisplayName = "نام",
-                        Name = "FirstName",
-                        Value = string.Empty
-                    },            new PropertyDescriptor
-                    {
-                        DisplayName = "نام خوانوادگی",
-                        Name = "LastName",
-                        Value = string.Empty
-                    },
-                        };
+                                        {
+                            new PropertyDescriptor
+                                {
+                                    DisplayName = "نام",
+                                    Name = "FirstName",
+                                    Value = string.Empty
+                                },            new PropertyDescriptor
+                                {
+                                    DisplayName = "نام خوانوادگی",
+                                    Name = "LastName",
+                                    Value = string.Empty
+                                },
+                                    };
         EditorModalService.OnConfirmClick = () =>
         {
 

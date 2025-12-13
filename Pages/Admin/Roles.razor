@@ -10,34 +10,96 @@
     {
         RoleDataGridConfig = new DataGridConfig();
         RoleDataGridConfig.Title = "لیست نقش ها";
+        RoleDataGridConfig.GroupActions = new List<DataGridRowActionGroup>
+        {
+            new DataGridRowActionGroup
+            {
+                Width = "200px",
+                Actions = new List<DataGridRowAction>
+                {
+                    new DataGridRowAction
+                    {
+                        ButtonClass = ButtonsClass.btn_primary,
+                        IconClass=IconsClass.fa_pen_to_square,
+                        OnClick = (rowitem) =>
+                        {
+
+                        }
+                    }
+                }
+            }
+        };
+
         RoleDataGridConfig.Columns = new List<DataGridColumn>
         {
             new DataGridColumn
             {
                 PropertyName = "Title",
                 Title = "عنوان"
-            },
+            }
         };
         RoleDataGridConfig.LoadDataAsync = () =>
         {
             return Task.FromResult(new List<dynamic>
-                {
+                                    {
                new {Title = "نقش 1"  },
                new {Title = "نقش 2"  },
-                });
+                                    });
+        };
+        RoleDataGridConfig.EditButtonDataGridConfig.OnOpenModal = (row) =>
+        {
+            return new InputModal
+            {
+                Fields = new List<ItemField>
+                                {
+                                new ItemField
+                                {
+                                    PropertyName = "Title",
+                                    Title = "عنوان",
+                                    Value = row["Title"],
+ValuType = ModelEditorValueType.Text
+                                },
+                                new SelectiveItemField
+                                {
+                                    PropertyName = "User",
+                                    Title = "کاربر",
+ValuType = ModelEditorValueType.Selective,
+Items = new List<SelectItem>
+{
+        new SelectItem { Id = 1, Title = "مشهد" },
+        new SelectItem { Id = 2, Title = "تهران" },
+        new SelectItem { Id = 3, Title = "اصفهان" },
+        new SelectItem { Id = 4, Title = "شیراز" },
+}
+                                },
+                                }
+            };
         };
         RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
             {
                 ButtonTitle = "نقش جدید",
                 IsShow = true,
-Fields = new List<NewItemField>
+                Fields = new List<ItemField>
+                            {
+                                new ItemField
+                                {
+                                    PropertyName = "RoleName",
+                                    Title = "عنوان"
+                                },
+                                new SelectiveItemField
+                                {
+                                    PropertyName = "User",
+                                    Title = "کاربر",
+ValuType = ModelEditorValueType.Selective,
+Items = new List<SelectItem>
 {
-  new NewItemField
-  {
-PropertyName = "RoleName",
-      Title = "عنوان"
-  }              
-},
+        new SelectItem { Id = 1, Title = "مشهد" },
+        new SelectItem { Id = 2, Title = "تهران" },
+        new SelectItem { Id = 3, Title = "اصفهان" },
+        new SelectItem { Id = 4, Title = "شیراز" },
+}
+                                },
+                            },
                 OnSubmitCreateItem = (form) =>
                 {
                     return true;
