@@ -46,6 +46,18 @@
                new {Title = "نقش 2"  },
                                     });
         };
+        RoleDataGridConfig.DeleteRowButtonDataGridConfig.OnOpenModal = (row) =>
+        {
+            return new ConfirmModal
+            {
+                Title = "هشدار",
+                Content = "ایا از حذف این سطر مطمئن هستید؟",
+                OnConfirm = () =>
+                {
+                
+                }
+            };
+        };
         RoleDataGridConfig.EditButtonDataGridConfig.OnOpenModal = (row) =>
         {
             return new InputModal

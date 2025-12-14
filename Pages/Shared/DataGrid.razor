@@ -63,9 +63,9 @@
                                             <button @onclick="()=>OpenEditUserModalAsync(item)" class="btn btn-sm btn-primary me-1">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
-                                            @*                                             <button @onclick="()=>OpenConfirmDeleteUserModal(User.Id)" class="btn btn-sm btn-danger">
+                                            <button @onclick="()=>OpenConfirmModal(item)" class="btn btn-sm btn-danger">
                                                 <i class="fa-solid fa-trash"></i>
-                                            </button> *@
+                                            </button>
                                         </span>
                                     </td>
                                 </tr>
@@ -132,11 +132,38 @@
     </div>
 }
 
+@if (IsShowConfirmModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">@ConfirmModal.Title</h5>
+                </div>
+
+                <div class="modal-body">
+                    <p>@ConfirmModal.Content</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseConfirmModal">لغو</button>
+                    <button class="btn btn-danger" @onclick="OnConfirmConfirmModal">تأیید</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 @code {
     [Parameter]
     public DataGridConfig Config { get; set; } = new DataGridConfig();
     private List<Dictionary<string, string>> Data { get; set; } = new List<Dictionary<string, string>>();
     public InputModal InputModal { get; set; } = new InputModal();
+    public bool IsShowConfirmModal { get; set; } = false;
+
+    public ConfirmModal ConfirmModal { get; set; } = new ConfirmModal();
+
     private bool IsShowInputMadal { get; set; }
     protected override async Task OnInitializedAsync()
     {
@@ -167,13 +194,25 @@
     {
         IsShowInputMadal = false;
     }
-    public void OpenEditUserModalAsync(Dictionary<string,string> row)
+    public void OpenEditUserModalAsync(Dictionary<string, string> row)
     {
         InputModal = Config.EditButtonDataGridConfig.OnOpenModal(row);
         IsShowInputMadal = true;
     }
-
-
+    public void OpenConfirmModal(Dictionary<string,string> row)
+    {
+        ConfirmModal = Config.DeleteRowButtonDataGridConfig.OnOpenModal(row);
+        IsShowConfirmModal = true;
+    }
+    public void CloseConfirmModal()
+    {
+        IsShowConfirmModal = false;
+    }    
+    public void OnConfirmConfirmModal()
+    {
+        ConfirmModal.OnConfirm();
+        IsShowConfirmModal = false;
+    }
     /*private int SelectedUserIdForDelete;
     public UserViewModel? SelectedUserForEdit { get; set; }
     private bool IsOpenCreateUserModal;
@@ -185,19 +224,19 @@
     public async Task OpenEditUserModalAsync(int Id)
     {
         var UserModalFields = new List<PropertyDescriptor>
-                                        {
-                            new PropertyDescriptor
-                                {
-                                    DisplayName = "نام",
-                                    Name = "FirstName",
-                                    Value = string.Empty
-                                },            new PropertyDescriptor
-                                {
-                                    DisplayName = "نام خوانوادگی",
-                                    Name = "LastName",
-                                    Value = string.Empty
-                                },
-                                    };
+                                            {
+                                new PropertyDescriptor
+                                    {
+                                        DisplayName = "نام",
+                                        Name = "FirstName",
+                                        Value = string.Empty
+                                    },            new PropertyDescriptor
+                                    {
+                                        DisplayName = "نام خوانوادگی",
+                                        Name = "LastName",
+                                        Value = string.Empty
+                                    },
+                                        };
         EditorModalService.OnConfirmClick = () =>
         {
 

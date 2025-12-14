@@ -8,6 +8,7 @@
         public Func<Task<List<dynamic>>>? LoadDataAsync { get; set; }
         public NewRowButtonDataGridConfig NewRowButtonDataGridConfig { get; set; } = new NewRowButtonDataGridConfig();
         public EditButtonDataGridConfig EditButtonDataGridConfig { get; set; } = new EditButtonDataGridConfig();
+        public DeleteRowButtonDataGridConfig DeleteRowButtonDataGridConfig { get; set; } = new DeleteRowButtonDataGridConfig();
     }
     public class DataGridColumn
     {
@@ -66,6 +67,12 @@
         public Func<Dictionary<string, string>, bool> OnSubmitCreateItem { get; set; }
         public List<ItemField> Fields { get; set; }
     }
+    public class ConfirmModal
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public Action OnConfirm { get; set; }
+    }
     public class NewRowButtonDataGridConfig : InputModal
     {
         public string ButtonTitle { get; set; }
@@ -73,7 +80,11 @@
     }
     public class EditButtonDataGridConfig : InputModal
     {
-        public Func<Dictionary<string,string>,InputModal> OnOpenModal { get; set; }
+        public Func<Dictionary<string, string>, InputModal> OnOpenModal { get; set; }
+    }
+    public class DeleteRowButtonDataGridConfig
+    {
+        public Func<Dictionary<string, string>, ConfirmModal> OnOpenModal { get; set; }
     }
     public class SelectItem
     {
