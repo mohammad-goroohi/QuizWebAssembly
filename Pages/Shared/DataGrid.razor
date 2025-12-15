@@ -125,7 +125,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="CloseInputMadal">بستن</button>
-                    <button class="btn btn-primary" @onclick="OnSubmitCreateItem">ثبت</button>
+                    <button class="btn btn-primary" @onclick="OnSubmitCreateItemAsync">ثبت</button>
                 </div>
             </div>
         </div>
@@ -167,6 +167,10 @@
     private bool IsShowInputMadal { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        await LoadDataGridAsync();
+    }
+    public async Task LoadDataGridAsync()
+    {
         var list = await Config.LoadDataAsync();
         foreach (var item in list)
         {
@@ -176,12 +180,13 @@
             Data.Add(dict);
         }
     }
-    public void OnSubmitCreateItem()
+    public async Task OnSubmitCreateItemAsync()
     {
         var form = Config.NewRowButtonDataGridConfig.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
         var CloseModal = Config.NewRowButtonDataGridConfig.OnSubmitCreateItem(form);
         if (CloseModal)
         {
+            await LoadDataGridAsync();
             CloseInputMadal();
         }
     }

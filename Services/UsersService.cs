@@ -1,5 +1,5 @@
 ﻿
-using QuizWebAssembly.Models.User;
+using QuizWebAssembly.Models.Users;
 
 namespace QuizWebAssembly.Services
 {

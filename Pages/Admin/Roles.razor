@@ -1,5 +1,6 @@
 ﻿@page "/Admin/Roles"
 @layout MainLayout
+@inject RolesService _rolesService
 
 
 <DataGrid Config="RoleDataGridConfig" />
@@ -40,30 +41,26 @@
         };
         RoleDataGridConfig.LoadDataAsync = () =>
         {
-            return Task.FromResult(new List<dynamic>
-                                    {
-               new {Title = "نقش 1"  },
-               new {Title = "نقش 2"  },
-                                    });
+            return Task.FromResult(_rolesService.Read().Cast<dynamic>().ToList());
         };
         RoleDataGridConfig.DeleteRowButtonDataGridConfig.OnOpenModal = (row) =>
         {
             return new ConfirmModal
-            {
-                Title = "هشدار",
-                Content = "ایا از حذف این سطر مطمئن هستید؟",
-                OnConfirm = () =>
                 {
-                
-                }
-            };
+                    Title = "هشدار",
+                    Content = "ایا از حذف این سطر مطمئن هستید؟",
+                    OnConfirm = () =>
+                    {
+
+                    }
+                };
         };
         RoleDataGridConfig.EditButtonDataGridConfig.OnOpenModal = (row) =>
         {
             return new InputModal
-            {
-                Fields = new List<ItemField>
-                                {
+                {
+                    Fields = new List<ItemField>
+                                    {
                                 new ItemField
                                 {
                                     PropertyName = "Title",
@@ -84,8 +81,8 @@ Items = new List<SelectItem>
         new SelectItem { Id = 4, Title = "شیراز" },
 }
                                 },
-                                }
-            };
+                                    }
+                };
         };
         RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
             {
@@ -95,7 +92,7 @@ Items = new List<SelectItem>
                             {
                                 new ItemField
                                 {
-                                    PropertyName = "RoleName",
+                                    PropertyName = "Title",
                                     Title = "عنوان"
                                 },
                                 new SelectiveItemField
@@ -114,6 +111,11 @@ Items = new List<SelectItem>
                             },
                 OnSubmitCreateItem = (form) =>
                 {
+                    var Role = new Role
+                    {
+                        Title = form["Title"]
+                    };
+                    _rolesService.Create(Role);
                     return true;
                 }
             };

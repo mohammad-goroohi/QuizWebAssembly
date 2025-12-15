@@ -1,4 +1,4 @@
-﻿namespace QuizWebAssembly.Models.User
+﻿namespace QuizWebAssembly.Models.Users
 {
     public class User
     {
