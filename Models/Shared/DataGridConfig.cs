@@ -5,7 +5,7 @@
         public string Title { get; set; } = string.Empty;
         public List<DataGridColumn> Columns { get; set; } = new List<DataGridColumn>();
         public List<DataGridRowActionGroup> GroupActions { get; set; } = new List<DataGridRowActionGroup>();
-        public Func<Task<List<dynamic>>>? LoadDataAsync { get; set; }
+        public Func<Task<List<object>>>? LoadDataAsync { get; set; }
         public NewRowButtonDataGridConfig NewRowButtonDataGridConfig { get; set; } = new NewRowButtonDataGridConfig();
         public EditButtonDataGridConfig EditButtonDataGridConfig { get; set; } = new EditButtonDataGridConfig();
         public DeleteRowButtonDataGridConfig DeleteRowButtonDataGridConfig { get; set; } = new DeleteRowButtonDataGridConfig();

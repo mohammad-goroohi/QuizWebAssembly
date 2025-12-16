@@ -171,12 +171,11 @@
     }
     public async Task LoadDataGridAsync()
     {
+        Data.Clear();
         var list = await Config.LoadDataAsync();
         foreach (var item in list)
         {
-            var dict = ((object)item).GetType()
-              .GetProperties()
-              .ToDictionary(p => p.Name, p => (string)p.GetValue(item));
+            var dict = item.ToDictionary();
             Data.Add(dict);
         }
     }
@@ -188,6 +187,7 @@
         {
             await LoadDataGridAsync();
             CloseInputMadal();
+            StateHasChanged();
         }
     }
     public void OpenInputMadal()
@@ -198,6 +198,10 @@
     public void CloseInputMadal()
     {
         IsShowInputMadal = false;
+        foreach (var Field in InputModal.Fields)
+        {
+            Field.Value = default;
+        }
     }
     public void OpenEditUserModalAsync(Dictionary<string, string> row)
     {
