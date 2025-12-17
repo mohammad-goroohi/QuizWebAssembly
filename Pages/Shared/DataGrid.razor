@@ -60,7 +60,7 @@
                                     } *@
                                     <td>
                                         <span class="action-icons ms-2">
-                                            <button @onclick="()=>OpenEditUserModalAsync(item)" class="btn btn-sm btn-primary me-1">
+                                            <button @onclick="()=>OpenEditModalAsync(item)" class="btn btn-sm btn-primary me-1">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                             <button @onclick="()=>OpenConfirmModal(item)" class="btn btn-sm btn-danger">
@@ -125,7 +125,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="CloseInputMadal">بستن</button>
-                    <button class="btn btn-primary" @onclick="OnSubmitCreateItemAsync">ثبت</button>
+                    <button class="btn btn-primary" @onclick="OnSubmitAsync">ثبت</button>
                 </div>
             </div>
         </div>
@@ -179,10 +179,10 @@
             Data.Add(dict);
         }
     }
-    public async Task OnSubmitCreateItemAsync()
+    public async Task OnSubmitAsync()
     {
-        var form = Config.NewRowButtonDataGridConfig.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
-        var CloseModal = Config.NewRowButtonDataGridConfig.OnSubmitCreateItem(form);
+        var form = InputModal.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
+        var CloseModal = InputModal.OnSubmit(form);
         if (CloseModal)
         {
             await LoadDataGridAsync();
@@ -192,7 +192,7 @@
     }
     public void OpenInputMadal()
     {
-        InputModal = Config.NewRowButtonDataGridConfig;
+        InputModal = Config.NewRowButtonDataGridConfig.OnOpenModal();
         IsShowInputMadal = true;
     }
     public void CloseInputMadal()
@@ -203,12 +203,12 @@
             Field.Value = default;
         }
     }
-    public void OpenEditUserModalAsync(Dictionary<string, string> row)
+    public void OpenEditModalAsync(Dictionary<string, string> row)
     {
-        InputModal = Config.EditButtonDataGridConfig.OnOpenModal(row);
+        InputModal = Config.EditRowButtonDataGridConfig.OnOpenModal(row);
         IsShowInputMadal = true;
     }
-    public void OpenConfirmModal(Dictionary<string,string> row)
+    public void OpenConfirmModal(Dictionary<string, string> row)
     {
         ConfirmModal = Config.DeleteRowButtonDataGridConfig.OnOpenModal(row);
         IsShowConfirmModal = true;
@@ -216,10 +216,11 @@
     public void CloseConfirmModal()
     {
         IsShowConfirmModal = false;
-    }    
-    public void OnConfirmConfirmModal()
+    }
+    public async Task OnConfirmConfirmModal()
     {
         ConfirmModal.OnConfirm();
+        await LoadDataGridAsync();
         IsShowConfirmModal = false;
     }
     /*private int SelectedUserIdForDelete;
@@ -233,19 +234,19 @@
     public async Task OpenEditUserModalAsync(int Id)
     {
         var UserModalFields = new List<PropertyDescriptor>
-                                            {
-                                new PropertyDescriptor
-                                    {
-                                        DisplayName = "نام",
-                                        Name = "FirstName",
-                                        Value = string.Empty
-                                    },            new PropertyDescriptor
-                                    {
-                                        DisplayName = "نام خوانوادگی",
-                                        Name = "LastName",
-                                        Value = string.Empty
-                                    },
-                                        };
+                                                                {
+                                                    new PropertyDescriptor
+                                                        {
+                                                            DisplayName = "نام",
+                                                            Name = "FirstName",
+                                                            Value = string.Empty
+                                                        },            new PropertyDescriptor
+                                                        {
+                                                            DisplayName = "نام خوانوادگی",
+                                                            Name = "LastName",
+                                                            Value = string.Empty
+                                                        },
+                                                            };
         EditorModalService.OnConfirmClick = () =>
         {
 

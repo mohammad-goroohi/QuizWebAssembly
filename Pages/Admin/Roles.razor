@@ -37,6 +37,11 @@
             {
                 PropertyName = "Title",
                 Title = "عنوان"
+            },
+            new DataGridColumn
+            {
+                PropertyName = "Id",
+                Title = "شناسه"
             }
         };
         RoleDataGridConfig.LoadDataAsync = () =>
@@ -50,23 +55,39 @@
                     Title = "هشدار",
                     Content = "ایا از حذف این سطر مطمئن هستید؟",
                     OnConfirm = () =>
-                    {
-
-                    }
+        {
+                    _rolesService.Delete(Convert.ToInt32(row["Id"]));
+                }
                 };
         };
-        RoleDataGridConfig.EditButtonDataGridConfig.OnOpenModal = (row) =>
+        RoleDataGridConfig.EditRowButtonDataGridConfig.OnOpenModal = (row) =>
         {
             return new InputModal
                 {
+                    OnSubmit = (form) =>
+        {
+                    var Role = new Role
+                    {
+                        Title = form["Title"]
+                    };
+                    _rolesService.Update(form["Id"].ToInt32(), Role);
+                    return true;
+                },
                     Fields = new List<ItemField>
-                                    {
+                                                {
+                                new ItemField
+                                {
+                                    PropertyName = "Id",
+                                    Title = "شناسه",
+                                    Value = row["Id"],
+                                    ValuType = ModelEditorValueType.Text
+                                },
                                 new ItemField
                                 {
                                     PropertyName = "Title",
                                     Title = "عنوان",
                                     Value = row["Title"],
-ValuType = ModelEditorValueType.Text
+                                    ValuType = ModelEditorValueType.Text
                                 },
                                 new SelectiveItemField
                                 {
@@ -81,14 +102,18 @@ Items = new List<SelectItem>
         new SelectItem { Id = 4, Title = "شیراز" },
 }
                                 },
-                                    }
+                                                }
                 };
         };
         RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
             {
                 ButtonTitle = "نقش جدید",
                 IsShow = true,
-                Fields = new List<ItemField>
+                OnOpenModal = () =>
+                {
+                    return new InputModal
+                    {
+                        Fields = new List<ItemField>
                             {
                                 new ItemField
                                 {
@@ -109,14 +134,16 @@ Items = new List<SelectItem>
 }
                                 },
                             },
-                OnSubmitCreateItem = (form) =>
-                {
-                    var Role = new Role
-                    {
-                        Title = form["Title"]
+                        OnSubmit = (form) =>
+                        {
+                            var Role = new Role
+                            {
+                                Title = form["Title"]
+                            };
+                            _rolesService.Create(Role);
+                            return true;
+                        }
                     };
-                    _rolesService.Create(Role);
-                    return true;
                 }
             };
 

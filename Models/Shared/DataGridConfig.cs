@@ -7,7 +7,7 @@
         public List<DataGridRowActionGroup> GroupActions { get; set; } = new List<DataGridRowActionGroup>();
         public Func<Task<List<object>>>? LoadDataAsync { get; set; }
         public NewRowButtonDataGridConfig NewRowButtonDataGridConfig { get; set; } = new NewRowButtonDataGridConfig();
-        public EditButtonDataGridConfig EditButtonDataGridConfig { get; set; } = new EditButtonDataGridConfig();
+        public EditRowButtonDataGridConfig EditRowButtonDataGridConfig { get; set; } = new EditRowButtonDataGridConfig();
         public DeleteRowButtonDataGridConfig DeleteRowButtonDataGridConfig { get; set; } = new DeleteRowButtonDataGridConfig();
     }
     public class DataGridColumn
@@ -59,12 +59,13 @@
     {
         Text,
         Number,
-        Selective
+        Selective,
+        Hidden
     }
     public class InputModal
     {
         public string Title { get; set; }
-        public Func<Dictionary<string, string>, bool> OnSubmitCreateItem { get; set; }
+        public Func<Dictionary<string, string>, bool> OnSubmit { get; set; }
         public List<ItemField> Fields { get; set; }
     }
     public class ConfirmModal
@@ -73,12 +74,13 @@
         public string Content { get; set; } = string.Empty;
         public Action OnConfirm { get; set; }
     }
-    public class NewRowButtonDataGridConfig : InputModal
+    public class NewRowButtonDataGridConfig
     {
+        public Func<InputModal> OnOpenModal { get; set; }
         public string ButtonTitle { get; set; }
         public bool IsShow { get; set; }
     }
-    public class EditButtonDataGridConfig : InputModal
+    public class EditRowButtonDataGridConfig
     {
         public Func<Dictionary<string, string>, InputModal> OnOpenModal { get; set; }
     }
