@@ -55,9 +55,9 @@
                     Title = "هشدار",
                     Content = "ایا از حذف این سطر مطمئن هستید؟",
                     OnConfirm = () =>
-        {
-                    _rolesService.Delete(Convert.ToInt32(row["Id"]));
-                }
+    {
+                _rolesService.Delete(Convert.ToInt32(row["Id"]));
+            }
                 };
         };
         RoleDataGridConfig.EditRowButtonDataGridConfig.OnOpenModal = (row) =>
@@ -65,16 +65,17 @@
             return new InputModal
                 {
                     OnSubmit = (form) =>
-        {
-                    var Role = new Role
-                    {
-                        Title = form["Title"]
-                    };
-                    _rolesService.Update(form["Id"].ToInt32(), Role);
-                    return true;
-                },
+    {
+                var Role = new Role
+                {
+                    Id = form["Id"].ToInt32(),
+                    Title = form["Title"]
+                };
+            _rolesService.Update(Role.Id, Role);
+                return true;
+            },
                     Fields = new List<ItemField>
-                                                {
+                                                    {
                                 new ItemField
                                 {
                                     PropertyName = "Id",
@@ -102,7 +103,7 @@ Items = new List<SelectItem>
         new SelectItem { Id = 4, Title = "شیراز" },
 }
                                 },
-                                                }
+                                                    }
                 };
         };
         RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig

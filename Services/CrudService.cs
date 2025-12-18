@@ -23,7 +23,7 @@ namespace QuizWebAssembly.Services
         
         public virtual void Update(int Id,Entity Entity)
         {
-            throw new NotImplementedException();
+            _entityCache[Id] = Entity;
         }
         public virtual void Delete(int Id)
         {
