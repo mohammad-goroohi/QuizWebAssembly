@@ -1,239 +1,214 @@
 ﻿@page "/Admin/Users"
 @layout MainLayout
-@inject UsersService UsersService
-@inject EditorModalService EditorModalService;
+@inject UsersService _usersService
 
-<style>
-    /* دکمه‌های عملیات در حالت عادی مخفی باشند */
-    .action-icons {
-        display: none;
-        white-space: nowrap;
-    }
-    /* وقتی موس روی ردیف رفت، نمایش داده شوند */
-    tr:hover .action-icons {
-        display: inline-block;
-    }
-</style>
-<div class="col-12">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span>لیست کاربران</span>
-            <div class="btn-group">
-                <button @onclick="OpenCreateUserModal" class="btn btn-primary"><i class="fa-solid fa-plus"></i> کاربر جدید</button>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">شناسه</th>
-                            <th scope="col">نام</th>
-                            <th scope="col">نام خوانوادگی</th>
-                            <th scope="col">نام کاربری</th>
-                            <th scope="col" style="width:120px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (UserList.Any())
-                        {
-                            @foreach (var User in UserList)
-                            {
-                                <tr>
-                                    <td>@User.Id</td>
-                                    <td>@User.FirstName</td>
-                                    <td>@User.LastName</td>
-                                    <td>@User.UserName</td>
-                                    <td>
-                                        <span class="action-icons ms-2">
-                                            <button @onclick="()=>OpenEditUserModalAsync(User.Id)" class="btn btn-sm btn-primary me-1">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                            <button @onclick="()=>OpenConfirmDeleteUserModal(User.Id)" class="btn btn-sm btn-danger">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </span>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">
-                                    هیچ داده‌ای موجود نیست
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-@if (SelectedUserForEdit != null)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title">User Details</h5>
-                    <button type="button" class="btn-close" @onclick="CloseEditUserModal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-2"><strong>شناسه:</strong> @SelectedUserForEdit.Id</div>
-                    <div class="mb-2"><strong>نام کاربری:</strong> @SelectedUserForEdit.UserName</div>
-                    <div class="mb-2"><strong>نام:</strong> @SelectedUserForEdit.FirstName</div>
-                    <div class="mb-2"><strong>نام خوانوادگی:</strong> @SelectedUserForEdit.LastName</div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CloseEditUserModal">بستن</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-}
-@if (IsOpenCreateUserModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">ایجاد کاربر جدید</h5>
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="mb-3">
-                        <label class="form-label">نام</label>
-                        <input class="form-control" @bind="CreateUser.FirstName" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">نام خانوادگی</label>
-                        <input class="form-control" @bind="CreateUser.LastName" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">نام کاربری</label>
-                        <input class="form-control" @bind="CreateUser.UserName" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">رمز عبور</label>
-                        <input type="password" class="form-control" @bind="CreateUser.Password" />
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CloseCreateUserModal">بستن</button>
-                    <button class="btn btn-primary" @onclick="CreateUserAsync">ثبت</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-}
-@if (SelectedUserIdForDelete != 0)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">تایید عملیات حذف</h5>
-                </div>
-
-                <div class="modal-body">
-                    <p>ایا از حذف این کاربر اطمینان دارید.</p>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CloseDeleteUserModal">لغو</button>
-                    <button class="btn btn-danger" @onclick="ConfirmDeleteUserModal">تأیید</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-}
+<DataGrid Config="DataGridConfig" />
 
 @code {
-    private List<UserViewModel> UserList { get; set; }
-    private int SelectedUserIdForDelete;
-    public UserViewModel? SelectedUserForEdit { get; set; }
-    private bool IsOpenCreateUserModal;
-    public User CreateUser { get; set; } = new User();
+    public DataGridConfig DataGridConfig { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        await LoadGridData();
-    }
-    protected async Task LoadGridData()
-    {
-        UserList = await UsersService.GetUsersAsync();
-    }
-    public async Task OpenEditUserModalAsync(int Id)
-    {
-        var UserModalFields = new List<PropertyDescriptor>
+        DataGridConfig = new DataGridConfig();
+        DataGridConfig.Title = "لیست کاربر ها";
+        DataGridConfig.GroupActions = new List<DataGridRowActionGroup>
+        {
+            new DataGridRowActionGroup
+            {
+                Width = "200px",
+                Actions = new List<DataGridRowAction>
+                {
+                    new DataGridRowAction
+                    {
+                        ButtonClass = ButtonsClass.btn_primary,
+                        IconClass=IconsClass.fa_pen_to_square,
+                        OnClick = (rowitem) =>
                         {
-            new PropertyDescriptor
-                {
-                    DisplayName = "نام",
-                    Name = "FirstName",
-                    Value = string.Empty
-                },            new PropertyDescriptor
-                {
-                    DisplayName = "نام خوانوادگی",
-                    Name = "LastName",
-                    Value = string.Empty
-                },
-                    };
-        EditorModalService.OnConfirmClick = () =>
-    {
 
-    };
-        EditorModalService.OpenModal(UserModalFields);
-        await Task.FromResult(0);
-        //SelectedUserForEdit = await UsersService.GetUserByIdAsync(Id);
+                        }
+                    }
+                }
+            }
+        };
+
+        DataGridConfig.Columns = new List<DataGridColumn>
+        {
+            new DataGridColumn
+            {
+                PropertyName = "Id",
+                Title = "شناسه"
+            },
+            new DataGridColumn
+            {
+                PropertyName = "FirstName",
+                Title = "نام"
+            },
+            new DataGridColumn
+            {
+                PropertyName = "LastName",
+                Title = "نام خوانوادگی"
+            },
+            new DataGridColumn
+            {
+                PropertyName = "UserName",
+                Title = "نام کاربری"
+            },
+        };
+        DataGridConfig.LoadDataAsync = () =>
+        {
+            return Task.FromResult(_usersService.Read().Cast<dynamic>().ToList());
+        };
+        DataGridConfig.DeleteRowButtonDataGridConfig.OnOpenModal = (row) =>
+        {
+            return new ConfirmModal
+                {
+                    Title = "هشدار",
+                    Content = "ایا از حذف این سطر مطمئن هستید؟",
+                    OnConfirm = () =>
+{
+        _usersService.Delete(Convert.ToInt32(row["Id"]));
     }
-    public void OpenCreateUserModal()
-    {
-        IsOpenCreateUserModal = true;
-    }
-    public async Task CreateUserAsync()
-    {
-        await UsersService.CreateUserAsync(CreateUser);
-        await LoadGridData();
-        CloseCreateUserModal();
-        CreateUser = new User();
-    }
-    public void CloseCreateUserModal()
-    {
-        IsOpenCreateUserModal = false;
-    }
-    public void CloseEditUserModal()
-    {
-        SelectedUserForEdit = null;
-    }
-    public async Task ConfirmDeleteUserModal()
-    {
-        await UsersService.DeleteUserAsync(SelectedUserIdForDelete);
-        await LoadGridData();
-        CloseDeleteUserModal();
-    }
-    public void CloseDeleteUserModal()
-    {
-        SelectedUserIdForDelete = 0;
-    }
-    public void OpenConfirmDeleteUserModal(int UserId)
-    {
-        SelectedUserIdForDelete = UserId;
+                };
+        };
+        DataGridConfig.EditRowButtonDataGridConfig.OnOpenModal = (row) =>
+        {
+            return new InputModal
+                {
+                    OnSubmit = (form) =>
+{
+        int Id = form["Id"].ToInt32();
+
+        var Entiry = _usersService.Read(Id);
+        Entiry.FirstName = form["FirstName"];
+        Entiry.LastName = form["LastName"];
+        Entiry.UserName = form["UserName"];
+        Entiry.UserName = form["Password"];
+    //_usersService.Update(User.Id, User);
+        return true;
+    },
+                    Fields = new List<ItemField>
+                                                                        {
+                                new ItemField
+                                {
+                                    PropertyName = "Id",
+                                    Title = "شناسه",
+                                    Value = row["Id"],
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "FirstName",
+                                    Title = "نام",
+                                    Value = row["FirstName"],
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "LastName",
+                                    Title = "نام خوانوادگی",
+                                    Value = row["LastName"],
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "UserName",
+                                    Title = "نام کاربری",
+                                    Value = row["UserName"],
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "Password",
+                                    Title = "رمز عبور",
+                                    Value = row["Password"],
+                                    ValuType = ModelEditorValueType.Text
+                                }/*,
+                                new SelectiveItemField
+                                {
+                                    PropertyName = "User",
+                                    Title = "کاربر",
+ValuType = ModelEditorValueType.Selective,
+Items = new List<SelectItem>
+{
+        new SelectItem { Id = 1, Title = "مشهد" },
+        new SelectItem { Id = 2, Title = "تهران" },
+        new SelectItem { Id = 3, Title = "اصفهان" },
+        new SelectItem { Id = 4, Title = "شیراز" },
+}
+                                },*/
+                                                                        }
+                };
+        };
+        DataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
+            {
+                ButtonTitle = "کاربر جدید",
+                IsShow = true,
+                OnOpenModal = () =>
+                {
+                    return new InputModal
+                    {
+                        Fields = new List<ItemField>
+                        {
+                                new ItemField
+                                {
+                                    PropertyName = "FirstName",
+                                    Title = "نام",
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "LastName",
+                                    Title = "نام خوانوادگی",
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "UserName",
+                                    Title = "نام کاربری",
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "Password",
+                                    Title = "رمز عبور",
+                                    ValuType = ModelEditorValueType.Text
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "RepeatPassword",
+                                    Title = "تکرار رمز عبور",
+                                    ValuType = ModelEditorValueType.Text
+                                }
+                                /*
+                                new SelectiveItemField
+                                {
+                                    PropertyName = "User",
+                                    Title = "کاربر",
+ValuType = ModelEditorValueType.Selective,
+Items = new List<SelectItem>
+{
+        new SelectItem { Id = 1, Title = "مشهد" },
+        new SelectItem { Id = 2, Title = "تهران" },
+        new SelectItem { Id = 3, Title = "اصفهان" },
+        new SelectItem { Id = 4, Title = "شیراز" },
+}
+                                },*/
+                        },
+                        OnSubmit = (form) =>
+                        {
+                            var User = new User
+                            {
+                                FirstName = form["FirstName"],
+                                LastName = form["LastName"],
+                                UserName = form["UserName"],
+                                Password = form["Password"]
+                            };
+                            _usersService.Create(User);
+                            return true;
+                        }
+                    };
+                }
+            };
+
     }
 }
-
