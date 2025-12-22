@@ -117,7 +117,7 @@
                                 {
                                     @* <SearchableSelect Items="((SelectiveItemField)Field).Items" /> *@
                                     @* <MultiSelect Items="((SelectiveItemField)Field).Items" /> *@
-                                    <GridMultiSelect Items="((SelectiveItemField)Field).Items" />
+                                    <GridMultiSelect ValueChanged="(values)=>SelectiveValueChanged(values,Field)" Items="((SelectiveItemField)Field).Items" />
                                     break;
                                 }
                         }
@@ -223,70 +223,9 @@
         await LoadDataGridAsync();
         IsShowConfirmModal = false;
     }
-    /*private int SelectedUserIdForDelete;
-    public UserViewModel? SelectedUserForEdit { get; set; }
-    private bool IsOpenCreateUserModal;
-    public User CreateUser { get; set; } = new User();
-    protected async Task LoadGridData()
+    private void SelectiveValueChanged(List<int> Values,ItemField Field)
     {
-        UserList = await UsersService.GetUsersAsync();
-        }
-    public async Task OpenEditUserModalAsync(int Id)
-    {
-        var UserModalFields = new List<PropertyDescriptor>
-                                                                {
-                                                    new PropertyDescriptor
-                                                        {
-                                                            DisplayName = "نام",
-                                                            Name = "FirstName",
-                                                            Value = string.Empty
-                                                        },            new PropertyDescriptor
-                                                        {
-                                                            DisplayName = "نام خوانوادگی",
-                                                            Name = "LastName",
-                                                            Value = string.Empty
-                                                        },
-                                                            };
-        EditorModalService.OnConfirmClick = () =>
-        {
-
-            };
-        EditorModalService.OpenModal(UserModalFields);
-        await Task.FromResult(0);
-        //SelectedUserForEdit = await UsersService.GetUserByIdAsync(Id);
-        }
-    public void OpenCreateUserModal()
-    {
-        IsOpenCreateUserModal = true;
-        }
-    public async Task CreateUserAsync()
-    {
-        await UsersService.CreateUserAsync(CreateUser);
-        await LoadGridData();
-        CloseCreateUserModal();
-        CreateUser = new User();
-        }
-    public void CloseCreateUserModal()
-    {
-        IsOpenCreateUserModal = false;
-        }
-    public void CloseEditUserModal()
-    {
-        SelectedUserForEdit = null;
-        }
-    public async Task ConfirmDeleteUserModal()
-    {
-        await UsersService.DeleteUserAsync(SelectedUserIdForDelete);
-        await LoadGridData();
-        CloseDeleteUserModal();
-        }
-    public void CloseDeleteUserModal()
-    {
-        SelectedUserIdForDelete = 0;
-        }
-    public void OpenConfirmDeleteUserModal(int UserId)
-    {
-        SelectedUserIdForDelete = UserId;
-        }*/
+        Field.Value = string.Join(',', Values);
+    }
 }
 

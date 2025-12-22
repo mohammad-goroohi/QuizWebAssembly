@@ -53,7 +53,7 @@
     }
     public class SelectiveItemField : ItemField
     {
-        public List<SelectItem> Items { get; set; }
+        public List<SelectItem> Items { get; set; } = new List<SelectItem>();
     }
     public enum ModelEditorValueType
     {

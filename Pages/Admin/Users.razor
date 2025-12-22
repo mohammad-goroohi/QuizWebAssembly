@@ -1,6 +1,7 @@
 ﻿@page "/Admin/Users"
 @layout MainLayout
 @inject UsersService _usersService
+@inject RolesService _roleService
 
 
 <DataGrid Config="DataGridConfig" />
@@ -122,20 +123,18 @@
                                     Title = "رمز عبور",
                                     Value = row["Password"],
                                     ValuType = ModelEditorValueType.Text
-                                }/*,
+                                },
                                 new SelectiveItemField
                                 {
-                                    PropertyName = "User",
-                                    Title = "کاربر",
-ValuType = ModelEditorValueType.Selective,
-Items = new List<SelectItem>
-{
-        new SelectItem { Id = 1, Title = "مشهد" },
-        new SelectItem { Id = 2, Title = "تهران" },
-        new SelectItem { Id = 3, Title = "اصفهان" },
-        new SelectItem { Id = 4, Title = "شیراز" },
-}
-                                },*/
+                                    PropertyName = "RolesId",
+                                    Title = "نقش",
+                                    ValuType = ModelEditorValueType.Selective,
+                                    Items = _roleService.Read().Select(r=>new SelectItem
+                                    {
+                                        Id = r.Id,
+                                    Title = r.Title
+                                    }).ToList()
+                                },
                                                                         }
                 };
         };
@@ -178,21 +177,18 @@ Items = new List<SelectItem>
                                     PropertyName = "RepeatPassword",
                                     Title = "تکرار رمز عبور",
                                     ValuType = ModelEditorValueType.Text
-                                }
-                                /*
+                                },
                                 new SelectiveItemField
                                 {
-                                    PropertyName = "User",
-                                    Title = "کاربر",
-ValuType = ModelEditorValueType.Selective,
-Items = new List<SelectItem>
-{
-        new SelectItem { Id = 1, Title = "مشهد" },
-        new SelectItem { Id = 2, Title = "تهران" },
-        new SelectItem { Id = 3, Title = "اصفهان" },
-        new SelectItem { Id = 4, Title = "شیراز" },
-}
-                                },*/
+                                    PropertyName = "RolesId",
+                                    Title = "نقش",
+                                    ValuType = ModelEditorValueType.Selective,
+                                    Items = _roleService.Read().Select(r=>new SelectItem
+                                    {
+                                        Id = r.Id,
+                                    Title = r.Title
+                                    }).ToList()
+                                },
                         },
                         OnSubmit = (form) =>
                         {
@@ -201,7 +197,8 @@ Items = new List<SelectItem>
                                 FirstName = form["FirstName"],
                                 LastName = form["LastName"],
                                 UserName = form["UserName"],
-                                Password = form["Password"]
+                                Password = form["Password"],
+                                RolesId = form["RolesId"].Split(",").Select(rid=>rid.ToInt32()).ToList(),
                             };
                             _usersService.Create(User);
                             return true;

@@ -1,4 +1,5 @@
-﻿using QuizWebAssembly.Models.Shared;
+﻿using QuizWebAssembly.Models.Roles;
+using QuizWebAssembly.Models.Shared;
 
 namespace QuizWebAssembly.Models.Users
 {
@@ -8,5 +9,7 @@ namespace QuizWebAssembly.Models.Users
         public string? LastName { get; set; }
         public string? UserName { get; set; }
         public string? Password { get; set; }
+        public List<int> RolesId { get; set; } = new List<int>();
+        public List<Role> Roles { get; set; } = new List<Role>();
     }
 }

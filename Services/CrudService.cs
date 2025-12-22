@@ -5,7 +5,7 @@ namespace QuizWebAssembly.Services
 {
     public abstract class CrudService<Entity> where Entity : BaseEntity
     {
-        private readonly Dictionary<int, Entity> _entityCache = new Dictionary<int, Entity>();
+        protected readonly Dictionary<int, Entity> _entityCache = new Dictionary<int, Entity>();
         public virtual int Create(Entity Entity)
         {
             Entity.Id = new Random().Next();
