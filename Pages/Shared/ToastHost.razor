@@ -1,0 +1,70 @@
+﻿@inject ToastService Toast
+@inject IJSRuntime JS
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    <div @ref="_toastRef" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header @HeaderClass">
+            @* <button type="button" class="btn-close me-2" data-bs-dismiss="toast" aria-label="Close"></button> *@
+
+            @if (!string.IsNullOrWhiteSpace(_title))
+            {
+                <strong class="ms-auto">@_title</strong>
+            }
+            else
+            {
+                <strong class="ms-auto">@LevelLabel</strong>
+            }
+        </div>
+        <div class="toast-body">
+            @_message
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private ElementReference _toastRef;
+    private string _message = "";
+    private string? _title;
+    private ToastLevel _level = ToastLevel.Info;
+    private int _durationMs = 3000;
+
+    private string HeaderClass => _level switch
+    {
+        ToastLevel.Success => "bg-success text-white",
+        ToastLevel.Info => "bg-primary text-white",
+        ToastLevel.Warning => "bg-warning",
+        ToastLevel.Error => "bg-danger text-white",
+        _ => "bg-secondary text-white"
+    };
+
+    private string LevelLabel => _level switch
+    {
+        ToastLevel.Success => "Success",
+        ToastLevel.Info => "Info",
+        ToastLevel.Warning => "Warning",
+        ToastLevel.Error => "Error",
+        _ => "Notice"
+    };
+
+    protected override void OnInitialized()
+    {
+        Toast.OnShow += HandleShow;
+    }
+
+    private async void HandleShow(ToastRequest req)
+    {
+        _message = req.Message;
+        _title = req.Title;
+        _level = req.Level;
+        _durationMs = req.DurationMs;
+
+        await InvokeAsync(StateHasChanged);
+        await JS.InvokeVoidAsync("blazorToast.show", _toastRef, _durationMs);
+    }
+
+    public void Dispose()
+    {
+        Toast.OnShow -= HandleShow;
+    }
+}

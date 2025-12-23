@@ -61,6 +61,21 @@
             }
         });
     </script>
+    <script>
+        window.blazorToast = {
+            show: function (elem, delayMs) {
+                if (!elem) return;
+                try {
+                    const opt = { autohide: true, delay: delayMs || 3000 };
+                    const toast = bootstrap.Toast.getOrCreateInstance(elem, opt);
+                    toast.show();
+                } catch (e) {
+                    console.warn("Toast init failed:", e);
+                }
+            }
+        };
+    </script>
+
 </body>
 
 </html>
