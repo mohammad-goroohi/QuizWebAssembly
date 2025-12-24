@@ -94,7 +94,7 @@
                                     PropertyName = "Id",
                                     Title = "شناسه",
                                     Value = row["Id"],
-                                    ValuType = ModelEditorValueType.Text
+                                    ValuType = ModelEditorValueType.Readonly
                                 },
                                 new ItemField
                                 {
@@ -122,7 +122,7 @@
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
                                     Value = row["Password"],
-                                    ValuType = ModelEditorValueType.Text
+                                    ValuType = ModelEditorValueType.Password
                                 },
                                 new SelectiveItemField
                                 {
@@ -170,13 +170,13 @@
                                 {
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
-                                    ValuType = ModelEditorValueType.Text
+                                    ValuType = ModelEditorValueType.Password
                                 },
                                 new ItemField
                                 {
                                     PropertyName = "RepeatPassword",
                                     Title = "تکرار رمز عبور",
-                                    ValuType = ModelEditorValueType.Text
+                                    ValuType = ModelEditorValueType.Password
                                 },
                                 new SelectiveItemField
                                 {

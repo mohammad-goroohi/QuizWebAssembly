@@ -60,7 +60,9 @@
         Text,
         Number,
         Selective,
-        Hidden
+        Hidden,
+        Readonly,
+        Password
     }
     public class InputModal
     {

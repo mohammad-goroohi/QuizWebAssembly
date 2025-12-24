@@ -120,6 +120,22 @@
                                     <GridMultiSelect ValueChanged="(values)=>SelectiveValueChanged(values,Field)" Items="((SelectiveItemField)Field).Items" />
                                     break;
                                 }
+                                            case ModelEditorValueType.Readonly:
+                                                {
+                                                    <div class="mb-3">
+                                                        <label class="form-label">@Field.Title</label>
+                                                        <input disabled class="form-control" @bind="Field.Value" />
+                                                    </div>
+                                                    break;
+                                                }
+                                            case ModelEditorValueType.Password:
+                                                {
+                                                    <div class="mb-3">
+                                                        <label class="form-label">@Field.Title</label>
+                                                        <input type="password" class="form-control" @bind="Field.Value" />
+                                                    </div>
+                                                    break;
+                                                }
                         }
                     }
                 </div>
