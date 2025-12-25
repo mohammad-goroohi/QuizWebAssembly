@@ -1,12 +1,12 @@
 ﻿<style>
     /* دکمه‌های عملیات در حالت عادی مخفی باشند */
     .action-icons {
-    display: none;
-    white-space: nowrap;
+        display: none;
+        white-space: nowrap;
     }
     /* وقتی موس روی ردیف رفت، نمایش داده شوند */
     tr:hover .action-icons {
-    display: inline-block;
+        display: inline-block;
     }
 </style>
 <div class="col-12">
@@ -88,7 +88,7 @@
 @if (IsShowInputMadal)
 {
     <div class="modal modal-lg fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
+        <div class="modal-dialog @InputModal.Size">
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -96,30 +96,41 @@
                 </div>
 
                 <div class="modal-body">
-                    @foreach (var Field in InputModal.Fields)
-                    {
-                        @switch (Field.ValuType)
-                        {
-                            case ModelEditorValueType.Text:
-                                {
-                                    <div class="mb-3">
-                                        <label class="form-label">@Field.Title</label>
-                                        <input class="form-control" @bind="Field.Value" />
-                                    </div>
-                                    break;
-                                }
-                            case ModelEditorValueType.Number:
-                                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            @for (int i = 0; i < InputModal.ColumnCount; i++)
+                            {
+                                <div class="col-md-@(12/InputModal.ColumnCount)">
+                                    @foreach (var Field in InputModal.Fields.Where((item, index) => index % InputModal.ColumnCount == i))
+                                    {
+                                        @switch (Field.ValuType)
+                                        {
+                                            case ModelEditorValueType.Text:
+                                                {
+                                                    <div class="mb-3">
+                                                        <label class="form-label">@Field.Title</label>
+                                                        <input class="form-control" @bind="Field.Value" />
+                                                    </div>
+                                                    break;
+                                                }
+                                            case ModelEditorValueType.Number:
+                                                {
 
-                                    break;
-                                }
-                            case ModelEditorValueType.Selective:
-                                {
-                                    @* <SearchableSelect Items="((SelectiveItemField)Field).Items" /> *@
-                                    @* <MultiSelect Items="((SelectiveItemField)Field).Items" /> *@
-                                    <GridMultiSelect ValueChanged="(values)=>SelectiveValueChanged(values,Field)" Items="((SelectiveItemField)Field).Items" />
-                                    break;
-                                }
+                                                    break;
+                                                }
+                                            case ModelEditorValueType.Selective:
+                                                {
+                                                    @* <SearchableSelect Items="((SelectiveItemField)Field).Items" /> *@
+                                                    @* <MultiSelect Items="((SelectiveItemField)Field).Items" /> *@
+                                                    @* <GridMultiSelect ValueChanged="(values)=>SelectiveValueChanged(values,Field)" Items="((SelectiveItemField)Field).Items" /> *@
+
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">@Field.Title</label>
+                                                        <GridMultiSelect ValueChanged="(values)=>SelectiveValueChanged(values,Field)" Items="((SelectiveItemField)Field).Items" />
+                                                    </div>
+                                                    break;
+                                                }
                                             case ModelEditorValueType.Readonly:
                                                 {
                                                     <div class="mb-3">
@@ -136,8 +147,12 @@
                                                     </div>
                                                     break;
                                                 }
-                        }
-                    }
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="CloseInputMadal">بستن</button>
@@ -239,7 +254,7 @@
         await LoadDataGridAsync();
         IsShowConfirmModal = false;
     }
-    private void SelectiveValueChanged(List<int> Values,ItemField Field)
+    private void SelectiveValueChanged(List<int> Values, ItemField Field)
     {
         Field.Value = string.Join(',', Values);
     }

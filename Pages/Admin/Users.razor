@@ -75,6 +75,9 @@
         {
             return new InputModal
                 {
+                    Title = "ویرایش کاربر",
+                    ColumnCount = 2,
+                    Size = ModalSize.modal_xl,
                     OnSubmit = (form) =>
 {
         int Id = form["Id"].ToInt32();
@@ -146,6 +149,9 @@
                 {
                     return new InputModal
                     {
+                        Title = "ایجاد کاربر",
+                        ColumnCount = 2,
+                        Size = ModalSize.modal_xl,
                         Fields = new List<ItemField>
                         {
                                 new ItemField

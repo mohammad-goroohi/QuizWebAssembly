@@ -64,6 +64,9 @@
         {
             return new InputModal
                 {
+                    Title = "ویرایش نقش",
+                    ColumnCount = 1,
+                    Size = ModalSize.modal_xl,
                     OnSubmit = (form) =>
     {
                 var Role = new Role
@@ -89,20 +92,7 @@
                                     Title = "عنوان",
                                     Value = row["Title"],
                                     ValuType = ModelEditorValueType.Text
-                                },
-                                new SelectiveItemField
-                                {
-                                    PropertyName = "User",
-                                    Title = "کاربر",
-ValuType = ModelEditorValueType.Selective,
-Items = new List<SelectItem>
-{
-        new SelectItem { Id = 1, Title = "مشهد" },
-        new SelectItem { Id = 2, Title = "تهران" },
-        new SelectItem { Id = 3, Title = "اصفهان" },
-        new SelectItem { Id = 4, Title = "شیراز" },
-}
-                                },
+                                }
                                                     }
                 };
         };
@@ -114,26 +104,16 @@ Items = new List<SelectItem>
                 {
                     return new InputModal
                     {
+                        Title = "ایجاد نقش",
+                        ColumnCount = 1,
+                        Size = ModalSize.modal_xl,
                         Fields = new List<ItemField>
                             {
                                 new ItemField
                                 {
                                     PropertyName = "Title",
                                     Title = "عنوان"
-                                },
-                                new SelectiveItemField
-                                {
-                                    PropertyName = "User",
-                                    Title = "کاربر",
-ValuType = ModelEditorValueType.Selective,
-Items = new List<SelectItem>
-{
-        new SelectItem { Id = 1, Title = "مشهد" },
-        new SelectItem { Id = 2, Title = "تهران" },
-        new SelectItem { Id = 3, Title = "اصفهان" },
-        new SelectItem { Id = 4, Title = "شیراز" },
-}
-                                },
+                                }
                             },
                         OnSubmit = (form) =>
                         {

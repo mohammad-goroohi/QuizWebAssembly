@@ -39,6 +39,8 @@
     {
         public static string btn_primary { get; set; } = "btn-primary";
     }
+
+    //todo Validation
     public class ItemField
     {
         public string Title { get; set; } = string.Empty;
@@ -67,8 +69,18 @@
     public class InputModal
     {
         public string Title { get; set; }
+        public string Size { get; set; } = ModalSize.Default;
+        public int ColumnCount { get; set; } = 2;
         public Func<Dictionary<string, string>, bool> OnSubmit { get; set; }
         public List<ItemField> Fields { get; set; }
+    }
+    public static class ModalSize
+    {
+        public static string modal_sm { get; set; } = "modal-sm";
+        public static string Default { get; set; } = "";
+        public static string modal_lg { get; set; } = "modal-lg";
+        public static string modal_xl { get; set; } = "modal-xl";
+        public static string modal_fullscreen { get; set; } = "modal-fullscreen";
     }
     public class ConfirmModal
     {
