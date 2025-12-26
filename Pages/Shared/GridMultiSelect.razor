@@ -1,7 +1,7 @@
-﻿<div class="position-relative" @onclick:stopPropagation="true">
+﻿<div class="position-relative @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @onclick:stopPropagation="true">
 
     <!-- Input box -->
-    <div class="form-control d-flex flex-wrap align-items-center"
+    <div class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"") d-flex flex-wrap align-items-center"
          style="cursor: pointer;"
          @onclick="ToggleDropdown">
 
@@ -81,7 +81,8 @@
 </div>
 
 @code {
-    [Parameter] public List<SelectItem> Items { get; set; } = new();
+    //[Parameter] public List<SelectItem> Items { get; set; } = new();
+    [Parameter] public SelectiveItemField Field { get; set; }
     [Parameter] public List<int> Value { get; set; } = new();
     [Parameter] public EventCallback<List<int>> ValueChanged { get; set; }
 
@@ -92,14 +93,14 @@
     protected List<SelectItem> SelectedItems { get; set; } = new();
 
     protected IEnumerable<SelectItem> FilteredItems =>
-        Items.Where(i =>
+        Field.Items.Where(i =>
             (string.IsNullOrWhiteSpace(SearchId) || i.Id.ToString().Contains(SearchId)) &&
             (string.IsNullOrWhiteSpace(SearchTitle) || i.Title.Contains(SearchTitle, StringComparison.OrdinalIgnoreCase))
         );
 
     protected override void OnParametersSet()
     {
-        SelectedItems = Items.Where(i => Value.Contains(i.Id)).ToList();
+        SelectedItems = Field.Items.Where(i => Value.Contains(i.Id)).ToList();
     }
 
     protected void ToggleDropdown()

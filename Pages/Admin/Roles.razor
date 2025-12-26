@@ -112,7 +112,15 @@
                                 new ItemField
                                 {
                                     PropertyName = "Title",
-                                    Title = "عنوان"
+                                    Title = "عنوان",
+                                    ErrorMessage = "test",
+                                    ValidationRules = new List<ValidationItemField>
+                                    {
+                                        new Required
+                                        {
+                                            ErrorMessage = "اجباری",
+                                        }
+                                    }
                                 }
                             },
                         OnSubmit = (form) =>

@@ -1,4 +1,6 @@
-﻿namespace QuizWebAssembly.Models.Shared
+﻿using System.Text.RegularExpressions;
+
+namespace QuizWebAssembly.Models.Shared
 {
     public class DataGridConfig
     {
@@ -52,7 +54,25 @@
 
         public ModelEditorValueType ValuType { get; set; }
         public string Value { get; set; }
+        public List<ValidationItemField> ValidationRules { get; set; } = new List<ValidationItemField>();
+        public string ErrorMessage { get; set; }
     }
+    public abstract class ValidationItemField
+    {
+        public string ErrorMessage { get; set; }
+        public abstract bool Validate(string Value);
+    }
+    public class Required : ValidationItemField
+    {
+        public override bool Validate(string Value)
+        {
+            if (string.IsNullOrEmpty(Value))
+            {
+                return false;
+            }
+            return true;
+        }
+    }    
     public class SelectiveItemField : ItemField
     {
         public List<SelectItem> Items { get; set; } = new List<SelectItem>();
