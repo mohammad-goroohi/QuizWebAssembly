@@ -1,12 +1,12 @@
 ﻿<style>
     /* دکمه‌های عملیات در حالت عادی مخفی باشند */
     .action-icons {
-        display: none;
-        white-space: nowrap;
+    display: none;
+    white-space: nowrap;
     }
     /* وقتی موس روی ردیف رفت، نمایش داده شوند */
     tr:hover .action-icons {
-        display: inline-block;
+    display: inline-block;
     }
 </style>
 <div class="col-12">
@@ -109,7 +109,7 @@
                                                 {
                                                     <div class="mb-3">
                                                         <label class="form-label is-invalid">@Field.Title</label>
-                                                        <input class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
+                                                        <input @oninput="(e)=>ControlChanged(e,Field)" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
                                                         @if (!string.IsNullOrEmpty(Field.ErrorMessage))
                                                         {
                                                             <div class="invalid-feedback">
@@ -141,7 +141,7 @@
                                                                 @Field.ErrorMessage
                                                             </div>
                                                         }
-                                                        </div>
+                                                    </div>
                                                     break;
                                                 }
                                             case ModelEditorValueType.Readonly:
@@ -163,7 +163,7 @@
                                                 {
                                                     <div class="mb-3">
                                                         <label class="form-label is-invalid">@Field.Title</label>
-                                                        <input type="password" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
+                                                        <input @oninput="(e)=>ControlChanged(e,Field)" type="password" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
                                                         @if (!string.IsNullOrEmpty(Field.ErrorMessage))
                                                         {
                                                             <div class="invalid-feedback">
@@ -239,17 +239,14 @@
     }
     public async Task OnSubmitAsync()
     {
-        var form = InputModal.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
-        foreach (var Field in InputModal.Fields)
+        if (InputModal.Fields.Any(f=>f.ValidationRules.Any(r=>!r.IsValid(f.Value))))
         {
-            foreach (var Rule in Field.ValidationRules)
-            {
-                if (!Rule.Validate(Field.Value))
-                {
-                    //Field.
-                }
-            }
+            ApplyValidation();
+            return;
         }
+
+
+        var form = InputModal.Fields.ToDictionary(f => f.PropertyName, f => f.Value);
         var CloseModal = InputModal.OnSubmit(form);
         if (CloseModal)
         {
@@ -294,6 +291,30 @@
     private void SelectiveValueChanged(List<int> Values, ItemField Field)
     {
         Field.Value = string.Join(',', Values);
+    }
+    private void ControlChanged(ChangeEventArgs e, ItemField Field)
+    {
+        var value = e.Value?.ToString() ?? string.Empty;
+        ControlChanged(Field, value);
+    }
+    private void ControlChanged(ItemField Field,string Value)
+    {
+        foreach (var Rule in Field.ValidationRules)
+        {
+            if (!Rule.IsValid(Value))
+            {
+                Field.ErrorMessage = Rule.ErrorMessage;
+                break;
+            }
+            Field.ErrorMessage = string.Empty;
+        }
+    }
+    private void ApplyValidation()
+    {
+        foreach (var Field in InputModal.Fields)
+        {
+            ControlChanged(Field,Field.Value);
+        }
     }
 }
 

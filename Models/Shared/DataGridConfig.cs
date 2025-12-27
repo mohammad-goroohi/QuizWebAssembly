@@ -60,11 +60,11 @@ namespace QuizWebAssembly.Models.Shared
     public abstract class ValidationItemField
     {
         public string ErrorMessage { get; set; }
-        public abstract bool Validate(string Value);
+        public abstract bool IsValid(string Value);
     }
     public class Required : ValidationItemField
     {
-        public override bool Validate(string Value)
+        public override bool IsValid(string Value)
         {
             if (string.IsNullOrEmpty(Value))
             {
