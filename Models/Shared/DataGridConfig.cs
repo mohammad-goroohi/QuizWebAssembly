@@ -42,7 +42,6 @@ namespace QuizWebAssembly.Models.Shared
         public static string btn_primary { get; set; } = "btn-primary";
     }
 
-    //todo Validation
     public class ItemField
     {
         public string Title { get; set; } = string.Empty;
@@ -72,7 +71,40 @@ namespace QuizWebAssembly.Models.Shared
             }
             return true;
         }
-    }    
+    }     
+    public class MinLength : ValidationItemField
+    {
+        public int Length { get; set; }
+        public override bool IsValid(string Value)
+        {
+            if (Value.Length<Length)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+    public class MaxLength : ValidationItemField
+    {
+        public int Length { get; set; }
+        public override bool IsValid(string Value)
+        {
+            if (Value.Length > Length)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+    public class Regex : ValidationItemField
+    {
+        public string Pattern { get; set; }
+        public override bool IsValid(string Value)
+        {
+            var Reg = new System.Text.RegularExpressions.Regex(Pattern);
+            return Reg.IsMatch(Value);
+        }
+    }
     public class SelectiveItemField : ItemField
     {
         public List<SelectItem> Items { get; set; } = new List<SelectItem>();

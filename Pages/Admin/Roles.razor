@@ -63,38 +63,55 @@
         RoleDataGridConfig.EditRowButtonDataGridConfig.OnOpenModal = (row) =>
         {
             return new InputModal
+            {
+                Title = "ویرایش نقش",
+                ColumnCount = 1,
+                Size = ModalSize.modal_xl,
+                OnSubmit = (form) =>
                 {
-                    Title = "ویرایش نقش",
-                    ColumnCount = 1,
-                    Size = ModalSize.modal_xl,
-                    OnSubmit = (form) =>
-    {
-                var Role = new Role
+                    var Role = new Role
+                    {
+                        Id = form["Id"].ToInt32(),
+                        Title = form["Title"]
+                    };
+                    _rolesService.Update(Role.Id, Role);
+                    return true;
+                },
+                Fields = new List<ItemField>
                 {
-                    Id = form["Id"].ToInt32(),
-                    Title = form["Title"]
-                };
-            _rolesService.Update(Role.Id, Role);
-                return true;
-            },
-                    Fields = new List<ItemField>
-                                                    {
-                                new ItemField
-                                {
-                                    PropertyName = "Id",
-                                    Title = "شناسه",
-                                    Value = row["Id"],
-                                    ValuType = ModelEditorValueType.Readonly
-                                },
-                                new ItemField
-                                {
-                                    PropertyName = "Title",
-                                    Title = "عنوان",
-                                    Value = row["Title"],
-                                    ValuType = ModelEditorValueType.Text
-                                }
-                                                    }
-                };
+                    new ItemField
+                    {
+                        PropertyName = "Id",
+                        Title = "شناسه",
+                        Value = row["Id"],
+                        ValuType = ModelEditorValueType.Readonly
+                    },
+                    new ItemField
+                    {
+                        PropertyName = "Title",
+                        Title = "عنوان",
+                        Value = row["Title"],
+                        ValuType = ModelEditorValueType.Text,
+                        ValidationRules = new List<ValidationItemField>
+                        {
+                            new Required
+                            {
+                                ErrorMessage = "اجباری",
+                            },
+                            new MinLength
+                            {
+                                ErrorMessage = "حداقل 3 حرف",
+                                Length = 3
+                            },
+                            new MaxLength
+                            {
+                                ErrorMessage = "حداکثر 10 حرف",
+                                Length = 10
+                            }
+                        }
+                    }
+                }
+            };
         };
         RoleDataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
             {
@@ -118,6 +135,16 @@
                                         new Required
                                         {
                                             ErrorMessage = "اجباری",
+                                        },
+                                        new MinLength
+                                        {
+                                            ErrorMessage = "حداقل 3 حرف",
+                                            Length = 3
+                                        },
+                                        new MaxLength
+                                        {
+                                            ErrorMessage = "حداکثر 10 حرف",
+                                            Length = 10
                                         }
                                     }
                                 }

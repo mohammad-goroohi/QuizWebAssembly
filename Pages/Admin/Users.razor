@@ -54,6 +54,11 @@
                 PropertyName = "UserName",
                 Title = "نام کاربری"
             },
+            new DataGridColumn
+            {
+                PropertyName = "Email",
+                Title = "ایمیل"
+            },
         };
         DataGridConfig.LoadDataAsync = () =>
         {
@@ -87,11 +92,12 @@
         Entiry.LastName = form["LastName"];
         Entiry.UserName = form["UserName"];
         Entiry.UserName = form["Password"];
+        Entiry.Email = form["Email"];
     //_usersService.Update(User.Id, User);
         return true;
     },
                     Fields = new List<ItemField>
-                                                                        {
+                                                                            {
                                 new ItemField
                                 {
                                     PropertyName = "Id",
@@ -122,6 +128,21 @@
                                 },
                                 new ItemField
                                 {
+                                    PropertyName = "Email",
+                                    Title = "ایمیل",
+                                    Value = row["Email"],
+                                    ValuType = ModelEditorValueType.Text,
+                                    ValidationRules = new List<ValidationItemField>
+                                    {
+                                        new Regex
+                                        {
+                                            Pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                                            ErrorMessage = "فرمت ایمیل درست نیست."
+                                        }
+                                    }
+                                },
+                                new ItemField
+                                {
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
                                     Value = row["Password"],
@@ -139,7 +160,7 @@
                                     }).ToList(),
                                     ErrorMessage = "انتخاب نقش اجباری است"
                                 },
-                                                                        }
+                        }
                 };
         };
         DataGridConfig.NewRowButtonDataGridConfig = new NewRowButtonDataGridConfig
@@ -175,6 +196,20 @@
                                 },
                                 new ItemField
                                 {
+                                    PropertyName = "Email",
+                                    Title = "ایمیل",
+                                    ValuType = ModelEditorValueType.Text,
+                                    ValidationRules = new List<ValidationItemField>
+                                    {
+                                        new Regex
+                                        {
+                                            Pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                                            ErrorMessage = "فرمت ایمیل درست نیست."
+                                        }
+                                    }
+                                }, 
+                                new ItemField
+                                {
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
                                     ValuType = ModelEditorValueType.Password
@@ -201,9 +236,9 @@
                         {
                             var Password = form["Password"];
                             var RepeatPassword = form["RepeatPassword"];
-                            if (Password!=RepeatPassword)
+                            if (Password != RepeatPassword)
                             {
-                                _toastService.Show("رمز عبور با تکرار ان تفاوت دارد.",ToastLevel.Error,3000,"هشدار");
+                                _toastService.Show("رمز عبور با تکرار ان تفاوت دارد.", ToastLevel.Error, 3000, "هشدار");
                                 return false;
                             }
                             var User = new User
@@ -212,7 +247,7 @@
                                 LastName = form["LastName"],
                                 UserName = form["UserName"],
                                 Password = Password,
-                                RolesId = form["RolesId"].Split(",").Select(rid=>rid.ToInt32()).ToList(),
+                                RolesId = form["RolesId"].Split(",").Select(rid => rid.ToInt32()).ToList(),
                             };
                             _usersService.Create(User);
                             return true;
