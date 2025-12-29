@@ -116,7 +116,8 @@ namespace QuizWebAssembly.Models.Shared
         Selective,
         Hidden,
         Readonly,
-        Password
+        Password,
+        CheckBox
     }
     public class InputModal
     {

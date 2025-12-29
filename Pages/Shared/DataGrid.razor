@@ -160,10 +160,25 @@
                                                     break;
                                                 }
                                             case ModelEditorValueType.Password:
-                                                {
+                                            {
+                                                <div class="mb-3">
+                                                    <label class="form-label is-invalid">@Field.Title</label>
+                                                    <input @oninput="(e)=>ControlChanged(e,Field)" type="password" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
+                                                    @if (!string.IsNullOrEmpty(Field.ErrorMessage))
+                                                    {
+                                                        <div class="invalid-feedback">
+                                                            @Field.ErrorMessage
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                                break;
+                                            }                             
+                                            case ModelEditorValueType.CheckBox:
+                                            {
                                                     <div class="mb-3">
                                                         <label class="form-label is-invalid">@Field.Title</label>
-                                                        <input @oninput="(e)=>ControlChanged(e,Field)" type="password" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
+                                                        <input type="checkbox" @* @oninput="(e)=>ControlChanged(e,Field)" *@ class="form-check-input @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @* @bind="Field.Value" *@ />
                                                         @if (!string.IsNullOrEmpty(Field.ErrorMessage))
                                                         {
                                                             <div class="invalid-feedback">
@@ -172,8 +187,8 @@
                                                         }
 
                                                     </div>
-                                                    break;
-                                                }
+                                                break;
+                                            }
                                         }
                                     }
                                 </div>

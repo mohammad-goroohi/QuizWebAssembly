@@ -143,6 +143,21 @@
                                 },
                                 new ItemField
                                 {
+                                    PropertyName = "IsActive",
+                                    Title = "فعال",
+                                    Value = row["IsActive"],
+                                    ValuType = ModelEditorValueType.CheckBox,
+                                    // ValidationRules = new List<ValidationItemField>
+                                    // {
+                                    //     new Regex
+                                    //     {
+                                    //         Pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                                    //         ErrorMessage = "فرمت ایمیل درست نیست."
+                                    //     }
+                                    // }
+                                },
+                                new ItemField
+                                {
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
                                     Value = row["Password"],
@@ -208,6 +223,20 @@
                                         }
                                     }
                                 }, 
+                                new ItemField
+                                {
+                                    PropertyName = "IsActive",
+                                    Title = "فعال",
+                                    ValuType = ModelEditorValueType.CheckBox,
+                                    // ValidationRules = new List<ValidationItemField>
+                                    // {
+                                    //     new Regex
+                                    //     {
+                                    //         Pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                                    //         ErrorMessage = "فرمت ایمیل درست نیست."
+                                    //     }
+                                    // }
+                                },
                                 new ItemField
                                 {
                                     PropertyName = "Password",
