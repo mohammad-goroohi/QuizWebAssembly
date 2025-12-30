@@ -1,0 +1,20 @@
+﻿<div class="mb-3">
+    <label class="form-label is-invalid">@Field.Title</label>
+    <input type="checkbox" @onchange="(e)=>ControlChanged(e)" class="form-check-input @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" />
+    @if (!string.IsNullOrEmpty(Field.ErrorMessage))
+    {
+        <div class="invalid-feedback">
+            @Field.ErrorMessage
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public ItemField Field { get; set; }
+    [Parameter] public Action<string> oninput { get; set; }
+    private void ControlChanged(ChangeEventArgs e)
+    {
+        var value = (bool)e.Value;
+        oninput(Convert.ToString(value));
+    }
+}

@@ -176,17 +176,7 @@
                                             }                             
                                             case ModelEditorValueType.CheckBox:
                                             {
-                                                    <div class="mb-3">
-                                                        <label class="form-label is-invalid">@Field.Title</label>
-                                                        <input type="checkbox" @* @oninput="(e)=>ControlChanged(e,Field)" *@ class="form-check-input @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @* @bind="Field.Value" *@ />
-                                                        @if (!string.IsNullOrEmpty(Field.ErrorMessage))
-                                                        {
-                                                            <div class="invalid-feedback">
-                                                                @Field.ErrorMessage
-                                                            </div>
-                                                        }
-
-                                                    </div>
+                                                    <SimpelCheckBox Field="Field" oninput="(value)=>ControlChanged(Field,value)" />
                                                 break;
                                             }
                                         }
