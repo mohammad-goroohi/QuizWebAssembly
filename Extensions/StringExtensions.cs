@@ -4,7 +4,7 @@
     {
         public static int ToInt32(this string value)
         {
-            return Convert.ToInt32(value.ToString());
+            return Convert.ToInt32(value?.ToString());
         }
     }
 }
