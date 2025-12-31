@@ -77,6 +77,10 @@ namespace QuizWebAssembly.Models.Shared
         public int Length { get; set; }
         public override bool IsValid(string Value)
         {
+            if (string.IsNullOrEmpty(Value))
+            {
+                Value = string.Empty;
+            }
             if (Value.Length<Length)
             {
                 return false;
@@ -89,6 +93,10 @@ namespace QuizWebAssembly.Models.Shared
         public int Length { get; set; }
         public override bool IsValid(string Value)
         {
+            if (string.IsNullOrEmpty(Value))
+            {
+                Value = string.Empty;
+            }
             if (Value.Length > Length)
             {
                 return false;
@@ -101,6 +109,10 @@ namespace QuizWebAssembly.Models.Shared
         public string Pattern { get; set; }
         public override bool IsValid(string Value)
         {
+            if (string.IsNullOrEmpty(Value))
+            {
+                return true;
+            }
             var Reg = new System.Text.RegularExpressions.Regex(Pattern);
             return Reg.IsMatch(Value);
         }
