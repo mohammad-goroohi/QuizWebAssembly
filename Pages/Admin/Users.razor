@@ -59,6 +59,11 @@
                 PropertyName = "Email",
                 Title = "ایمیل"
             },
+            new DataGridColumn
+            {
+                PropertyName = "Tall",
+                Title = "قد"
+            },
         };
         DataGridConfig.LoadDataAsync = () =>
         {
@@ -93,6 +98,7 @@
         Entiry.UserName = form["UserName"];
         Entiry.UserName = form["Password"];
         Entiry.Email = form["Email"];
+        Entiry.Tall = form["Tall"].ToInt32();
     //_usersService.Update(User.Id, User);
         return true;
     },
@@ -155,6 +161,12 @@
                                     //         ErrorMessage = "فرمت ایمیل درست نیست."
                                     //     }
                                     // }
+                                },
+                                new ItemField
+                                {
+                                    PropertyName = "Tall",
+                                    Title = "قد",
+                                    ValuType = ModelEditorValueType.Number
                                 },
                                 new ItemField
                                 {
@@ -239,6 +251,12 @@
                                 },
                                 new ItemField
                                 {
+                                    PropertyName = "Tall",
+                                    Title = "قد",
+                                    ValuType = ModelEditorValueType.Number
+                                },
+                                new ItemField
+                                {
                                     PropertyName = "Password",
                                     Title = "رمز عبور",
                                     ValuType = ModelEditorValueType.Password
@@ -276,6 +294,7 @@
                                 LastName = form["LastName"],
                                 UserName = form["UserName"],
                                 Password = Password,
+                                Tall = form["Tall"].ToInt32(),
                                 RolesId = form["RolesId"].Split(",").Select(rid => rid.ToInt32()).ToList(),
                             };
                             _usersService.Create(User);

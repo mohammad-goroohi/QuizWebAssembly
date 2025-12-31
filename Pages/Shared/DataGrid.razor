@@ -122,7 +122,17 @@
                                                 }
                                             case ModelEditorValueType.Number:
                                                 {
+                                                    <div class="mb-3">
+                                                        <label class="form-label is-invalid">@Field.Title</label>
+                                                        <input type="number" @oninput="(e)=>ControlChanged(e,Field)" class="form-control @(!string.IsNullOrEmpty(Field.ErrorMessage)?"is-invalid":"")" @bind="Field.Value" />
+                                                        @if (!string.IsNullOrEmpty(Field.ErrorMessage))
+                                                        {
+                                                            <div class="invalid-feedback">
+                                                                @Field.ErrorMessage
+                                                            </div>
+                                                        }
 
+                                                    </div>
                                                     break;
                                                 }
                                             case ModelEditorValueType.Selective:
