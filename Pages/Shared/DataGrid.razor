@@ -189,6 +189,21 @@
                                                     <SimpelCheckBox Field="Field" oninput="(value)=>ControlChanged(Field,value)" />
                                                 break;
                                             }
+                                            case ModelEditorValueType.Date:
+                                                {
+                                                    <div class="mb-3">
+                                                        <label class="form-label is-invalid">@Field.Title</label>
+                                                        <PersianDatePicker oninput="(value)=>ControlChanged(Field,value)"  />
+                                                        @if (!string.IsNullOrEmpty(Field.ErrorMessage))
+                                                        {
+                                                            <div class="invalid-feedback">
+                                                                @Field.ErrorMessage
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                    break;
+                                                }
                                         }
                                     }
                                 </div>
