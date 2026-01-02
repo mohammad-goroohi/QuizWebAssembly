@@ -204,6 +204,21 @@
                                                     </div>
                                                     break;
                                                 }
+                                            case ModelEditorValueType.Time:
+                                                {
+                                                    <div class="mb-3">
+                                                        <label class="form-label is-invalid">@Field.Title</label>
+                                                        <TimePicker oninput="(value)=>ControlChanged(Field,value)" />
+                                                        @if (!string.IsNullOrEmpty(Field.ErrorMessage))
+                                                        {
+                                                            <div class="invalid-feedback">
+                                                                @Field.ErrorMessage
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                    break;
+                                                }
                                         }
                                     }
                                 </div>

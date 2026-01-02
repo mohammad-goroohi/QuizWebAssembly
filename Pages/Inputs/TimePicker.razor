@@ -1,0 +1,110 @@
+﻿<div class="mb-3" style="min-width:200px;">
+    <input class="form-control" maxlength="5"
+    value="@InputText"
+    @oninput="OnInput"
+    @onblur="OnBlur"
+    placeholder="HH:MM"
+    aria-label="time-input" />
+    @if (!string.IsNullOrEmpty(Error))
+    {
+        <div class="form-text text-danger">@Error</div>
+    }
+</div>
+
+@code {
+    [Parameter] public TimeSpan? Value { get; set; }
+    [Parameter] public EventCallback<TimeSpan?> ValueChanged { get; set; }
+
+    [Parameter] public bool Is24Hour { get; set; } = true;
+    [Parameter] public TimeSpan MinTime { get; set; } = TimeSpan.Zero;
+    [Parameter] public TimeSpan MaxTime { get; set; } = new TimeSpan(23, 59, 59);
+    [Parameter] public Action<string> oninput { get; set; }
+    private string InputText { get; set; } = "";
+    private string Error { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        if (Value.HasValue)
+        {
+            InputText = Value.Value.ToString(@"hh\:mm");
+        }
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        var raw = e?.Value?.ToString() ?? "";
+        // فقط ارقام و ":" نگه داشته می‌شود
+        var filtered = new string(raw.Where(c => char.IsDigit(c) || c == ':').ToArray());
+
+        // محدودیت طول
+        if (filtered.Length > 5) filtered = filtered.Substring(0, 5);
+
+        // اعمال ماسک خودکار: بعد از دو رقم اول ":" اضافه می‌شود
+        InputText = ApplyMask(filtered);
+        oninput(InputText);
+        Error = "";
+    }
+
+    private string ApplyMask(string s)
+    {
+        var digits = new string(s.Where(char.IsDigit).ToArray());
+        if (digits.Length == 0) return "";
+        if (digits.Length <= 2) return digits;
+        var hh = digits.Substring(0, Math.Min(2, digits.Length));
+        var mm = digits.Length > 2 ? digits.Substring(2, Math.Min(2, digits.Length - 2)) : "";
+        var result = hh;
+        if (mm.Length > 0) result += ":" + mm;
+        return result;
+    }
+
+    private async void OnBlur(FocusEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(InputText))
+        {
+            Value = null;
+            await ValueChanged.InvokeAsync(Value);
+            Error = "";
+            return;
+        }
+
+        if (!TryParseInput(InputText, out var ts))
+        {
+            Error = "فرمت زمان صحیح نیست";
+            return;
+        }
+
+        if (ts < MinTime || ts > MaxTime)
+        {
+            Error = $"زمان باید بین {FormatTime(MinTime)} و {FormatTime(MaxTime)} باشد";
+            return;
+        }
+
+        Value = ts;
+        await ValueChanged.InvokeAsync(Value);
+        Error = "";
+    }
+
+    private bool TryParseInput(string input, out TimeSpan ts)
+    {
+        ts = TimeSpan.Zero;
+        var parts = input.Split(':');
+        if (parts.Length != 2) return false;
+        if (!int.TryParse(parts[0], out var h)) return false;
+        if (!int.TryParse(parts[1], out var m)) return false;
+        if (m < 0 || m > 59) return false;
+
+        if (Is24Hour)
+        {
+            if (h < 0 || h > 23) return false;
+            ts = new TimeSpan(h, m, 0);
+            return true;
+        }
+        else
+        {
+            // برای سادگی حالت 12 ساعته پشتیبانی از تایپ مستقیم ندارد
+            return false;
+        }
+    }
+
+    private string FormatTime(TimeSpan t) => t.ToString(@"hh\:mm");
+}
