@@ -1,0 +1,88 @@
+﻿@page "/login"
+@layout EmptyLayout
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<PageTitle>Login</PageTitle>
+
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-3">ورود به حساب</h5>
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger py-2" role="alert">@ErrorMessage</div>
+                    }
+
+                    <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">نام کاربری</label>
+                            <input type="text" class="form-control" @bind="Model.Username" />
+                            <ValidationMessage For="@(() => Model.Username)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رمز عبور</label>
+                            <input type="password" class="form-control" @bind="Model.Password" />
+                            <ValidationMessage For="@(() => Model.Password)" />
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" @bind-Value="Model.RememberMe" />
+                                <label class="form-check-label">مرا به خاطر بسپار</label>
+                            </div>
+                            <a href="#" class="text-decoration-none">فراموشی رمز عبور؟</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" disabled="@IsSubmitting">
+                            @if (IsSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>در حال ورود...</span>
+                            }
+                            else
+                            {
+                                <span>ورود</span>
+                            }
+                        </button>
+                    </EditForm>
+                </div>
+            </div>
+
+            <p class="text-center mt-3 text-muted">
+                حساب ندارید؟ <a href="/register" class="text-decoration-none">ثبت‌نام</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel Model = new();
+    private string? ErrorMessage;
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        ErrorMessage = null;
+        IsSubmitting = true;
+
+        var result = await AuthService.LoginAsync(Model.Username, Model.Password, Model.RememberMe);
+        IsSubmitting = false;
+
+        if (result.Succeeded)
+        {
+            Nav.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            ErrorMessage = result.ErrorMessage ?? "ورود ناموفق بود. لطفاً دوباره تلاش کنید.";
+        }
+    }
+}
